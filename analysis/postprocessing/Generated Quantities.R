@@ -4,8 +4,7 @@ library(RColorBrewer)
 library(tidyverse)
 library(forcats)
 
-
-setwd("~/Documents/Research/loZIBpaper/R files")
+setwd(here::here())
 
 
 
