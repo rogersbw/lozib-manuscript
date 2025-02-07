@@ -6,7 +6,7 @@ here::i_am("analysis/SBIRTdatacleaning.R")
 
 
 # Read in and tidy data
-sbirt <- read.csv("data/sbirt.csv") |>
+sbirt <- read.csv("analysis/data/sbirt.csv") |>
   rename(id = ID1, visit = VISITNUM, alc = SUM_ALCofdrinkingdays,
          heavy = Heavy_Drinkingdays, thc = SUM_THC, stim = sum_Stim,
          group = Group) |>
