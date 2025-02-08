@@ -49,7 +49,12 @@ po/*~
 rsconnect/
 
 # Data folder (private data)
-analysis/data/
+analysis/data/sbirt_clean.rds
+analysis/data/sbirt.csv
 
 # Model output - stan draws (too large)
 analysis/postprocessing/model_output/
+
+# Model output - stan draws (too large)
+analysis/fit_results/loo/*.rds
+analysis/fit_results/parameter_draws/*.rds
