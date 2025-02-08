@@ -32,7 +32,7 @@ V <- 4 # Max number of visits
 
 #Fit the stan model
 fit_result <- fit_lozib(X, ll, y, visit, V = V, model = covmod,
-                        iter, warmup, chains,  seed = 1234)
+                        iter, warmup, chains,  seed = 9731)
 
 # Parse results into files of interest
 
