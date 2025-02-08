@@ -8,7 +8,5 @@
 #SBATCH --mail-type=end          # send email when job ends
 #SBATCH --mail-type=fail         # send email if job fails
 #SBATCH --mail-user=bwrogers@umass.edu
-module load r-rocker-ml-verse/4.2.3+apptainer 
-shopt -s expand_aliases 
 
-Rscript EstimatedValues.R $1
+Rscript run_fit.R $1
