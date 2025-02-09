@@ -1,11 +1,8 @@
 # To actually run the lozib model code
-library(loo)
-
 options(mc.cores = parallel::detectCores())
 
-here::i_am("analysis/run_fit.R")
-
-source("analysis/lozib/fit_lozib.R")
+require("loo")
+source("lozib/fit_lozib.R")
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -15,7 +12,7 @@ iter <- 20000
 warmup <- 5000
 chains <- 4
 
-sbirt <- readRDS("analysis/data/sbirt_clean.rds")
+sbirt <- readRDS("data/sbirt_clean.rds")
 
 # Fitting the Model
 
@@ -38,7 +35,7 @@ fit_result <- fit_lozib(X, ll, y, visit, V = V, model = covmod,
 
 loo_result <- fit_result$loo(cores = 3)
 saveRDS(loo_result,
-        file.path(paste0("analysis/fit_results/loo/", covmod, "_loo.rds")))
+        file.path(paste0("fit_results/loo/", covmod, "_loo.rds")))
 
 # Select which parameters to keep draws for
 # We want these four parameters for all models
@@ -64,4 +61,4 @@ if (covmod == "rifactor"){
 model_draws <- fit_result$draws(c(params))
 #Save to file
 saveRDS(model_draws,
-        paste0("analysis/fit_results/parameter_draws/draws_", covmod, ".rds"))
+        paste0("fit_results/parameter_draws/draws_", covmod, ".rds"))
