@@ -9,8 +9,8 @@ args <- commandArgs(trailingOnly = TRUE)
 covmod <- args[1]
 outcome <- args[2]
 
-iter <- 20000
-warmup <- 5000
+iter <- 40000
+warmup <- 10000
 chains <- 4
 
 sbirt <- readRDS("data/sbirt_clean.rds")
