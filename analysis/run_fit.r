@@ -7,6 +7,7 @@ source("lozib/fit_lozib.R")
 args <- commandArgs(trailingOnly = TRUE)
 
 covmod <- args[1]
+outcome <- args[2]
 
 iter <- 20000
 warmup <- 5000
@@ -16,14 +17,14 @@ sbirt <- readRDS("data/sbirt_clean.rds")
 
 # Fitting the Model
 
-idx <- !is.na(sbirt$heavy)
+idx <- !is.na(sbirt[[outcome]])
 
 P <- 7 # Number of predictor columns (visits*treatment groups)
 J <- length(unique(sbirt$id)) # Unique subjects
 N <- nrow(sbirt[idx,]) # Number of total observations
 ll <- sbirt$id[idx] # List of subject ids
 X <- as.matrix(sbirt[idx, 8:14]) # Predictor variables
-y <- sbirt$heavy[idx] # Outcome
+y <- sbirt[[outcome]][idx] # Outcome
 visit <- sbirt$visit[idx] # Visit number
 V <- 4 # Max number of visits
 
@@ -35,7 +36,7 @@ fit_result <- fit_lozib(X, ll, y, visit, V = V, model = covmod,
 
 loo_result <- fit_result$loo(cores = 3)
 saveRDS(loo_result,
-        file.path(paste0("fit_results/loo/", covmod, "_loo.rds")))
+        file.path(paste0("fit_results/loo/", outcome, "_", covmod, "_loo.rds")))
 
 # Select which parameters to keep draws for
 # We want these four parameters for all models
@@ -61,4 +62,5 @@ if (covmod == "rifactor"){
 model_draws <- fit_result$draws(c(params))
 #Save to file
 saveRDS(model_draws,
-        paste0("fit_results/parameter_draws/draws_", covmod, ".rds"))
+        paste0("fit_results/parameter_draws/draws_",
+               outcome, "_", covmod, ".rds"))
