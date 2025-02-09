@@ -31,6 +31,7 @@ transformed parameters{
   vector[N] theta;
   vector[N] pie;
   matrix[J, V]  gamma2;
+  matrix[V,V] Omega2;
   
   vector[N] log_lik;
   
@@ -39,6 +40,7 @@ transformed parameters{
     gamma2[j] = (sigma2 .* (L_Omega * gamma2z[j]'))';
   }
   
+  Omega2 = multiply_lower_tri_self_transpose(L_Omega);
   
   for(n in 1:N){
     theta[n] = inv_logit(X[n]*beta1 + sigma1*gamma1[ll[n]]);
