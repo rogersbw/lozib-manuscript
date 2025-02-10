@@ -1,0 +1,288 @@
+\begin{thebibliography}{}
+
+\bibitem[Albert et~al., 2014]{albert2014estimating}
+Albert, J.~M., Wang, W., and Nelson, S. (2014).
+\newblock Estimating overall exposure effects for zero-inflated regression
+  models with application to dental caries.
+\newblock {\em Statistical methods in medical research}, 23(3):257--278.
+
+\bibitem[Barata et~al., 2017]{barata2017effectiveness}
+Barata, I.~A., Shandro, J.~R., Montgomery, M., Polansky, R., Sachs, C.~J.,
+  Duber, H.~C., Weaver, L.~M., Heins, A., Owen, H.~S., Josephson, E.~B., et~al.
+  (2017).
+\newblock Effectiveness of sbirt for alcohol use disorders in the emergency
+  department: a systematic review.
+\newblock {\em Western journal of emergency medicine}, 18(6):1143.
+
+\bibitem[Barr et~al., 2013]{barr2013random}
+Barr, D.~J., Levy, R., Scheepers, C., and Tily, H.~J. (2013).
+\newblock Random effects structure for confirmatory hypothesis testing: Keep it
+  maximal.
+\newblock {\em Journal of memory and language}, 68(3):255--278.
+
+\bibitem[Brooks et~al., 2017]{brooks2017glmmtmb}
+Brooks, M.~E., Kristensen, K., {van Benthem}, K.~J., Magnusson, A., Berg,
+  C.~W., Nielsen, A., Skaug, H.~J., Maechler, M., and Bolker, B.~M. (2017).
+\newblock {glmmTMB} balances speed and flexibility among packages for
+  zero-inflated generalized linear mixed modeling.
+\newblock {\em The R Journal}, 9(2):378--400.
+
+\bibitem[Buu et~al., 2012]{buu2012statistical}
+Buu, A., Li, R., Tan, X., and Zucker, R.~A. (2012).
+\newblock Statistical models for longitudinal zero-inflated count data with
+  applications to the substance abuse field.
+\newblock {\em Statistics in medicine}, 31(29):4074--4086.
+
+\bibitem[Cohen~Jr, 1966]{cohen1966note}
+Cohen~Jr, A.~C. (1966).
+\newblock A note on certain discrete mixed distributions.
+\newblock {\em Biometrics}, pages 566--572.
+
+\bibitem[Cooper et~al., 2007]{cooper2007predicting}
+Cooper, N.~J., Lambert, P.~C., Abrams, K.~R., and Sutton, A.~J. (2007).
+\newblock Predicting costs over time using bayesian markov chain monte carlo
+  methods: an application to early inflammatory polyarthritis.
+\newblock {\em Health economics}, 16(1):37--56.
+
+\bibitem[Gabry and {\v{C}}e{\v{s}}novar, 2021]{gabry2021cmdstanr}
+Gabry, J. and {\v{C}}e{\v{s}}novar, R. (2021).
+\newblock cmdstanr: R interface to’cmdstan’.
+\newblock {\em URL: https://mc-stan. org/cmdstanr, https://discourse. mc-stan.
+  org}.
+
+\bibitem[Gardner et~al., 1995]{gardner1995regression}
+Gardner, W., Mulvey, E.~P., and Shaw, E.~C. (1995).
+\newblock Regression analyses of counts and rates: Poisson, overdispersed
+  poisson, and negative binomial models.
+\newblock {\em Psychological bulletin}, 118(3):392.
+
+\bibitem[Gelman et~al., 2013]{gelman2013bayesian}
+Gelman, A., Carlin, J.~B., Stern, H.~S., Dunson, D.~B., Vehtari, A., and Rubin,
+  D.~B. (2013).
+\newblock {\em Bayesian data analysis}.
+\newblock CRC press.
+
+\bibitem[Gelman et~al., 2015]{gelman2015stan}
+Gelman, A., Lee, D., and Guo, J. (2015).
+\newblock Stan: A probabilistic programming language for bayesian inference and
+  optimization.
+\newblock {\em Journal of Educational and Behavioral Statistics},
+  40(5):530--543.
+
+\bibitem[Gelman and Rubin, 1992]{gelman1992inference}
+Gelman, A. and Rubin, D.~B. (1992).
+\newblock Inference from iterative simulation using multiple sequences.
+\newblock {\em Statistical science}, 7(4):457--472.
+
+\bibitem[Ghosh et~al., 2006]{ghosh2006bayesian}
+Ghosh, S.~K., Mukhopadhyay, P., and Lu, J.-C.~J. (2006).
+\newblock Bayesian analysis of zero-inflated regression models.
+\newblock {\em Journal of Statistical planning and Inference},
+  136(4):1360--1375.
+
+\bibitem[Glass et~al., 2015]{glass2015specialty}
+Glass, J.~E., Hamilton, A.~M., Powell, B.~J., Perron, B.~E., Brown, R.~T., and
+  Ilgen, M.~A. (2015).
+\newblock Specialty substance use disorder services following brief alcohol
+  intervention: a meta-analysis of randomized controlled trials.
+\newblock {\em Addiction}, 110(9):1404--1415.
+
+\bibitem[Hall, 2000]{hall2000zero}
+Hall, D.~B. (2000).
+\newblock Zero-inflated poisson and binomial regression with random effects: a
+  case study.
+\newblock {\em Biometrics}, 56(4):1030--1039.
+
+\bibitem[Harrison, 2014]{harrison2014using}
+Harrison, X.~A. (2014).
+\newblock Using observation-level random effects to model overdispersion in
+  count data in ecology and evolution.
+\newblock {\em PeerJ}, 2:e616.
+
+\bibitem[Heilbron, 1994]{heilbron1994zero}
+Heilbron, D.~C. (1994).
+\newblock Zero-altered and other regression models for count data with added
+  zeros.
+\newblock {\em Biometrical Journal}, 36(5):531--547.
+
+\bibitem[Hinde and Dem{\'e}trio, 1998]{hinde1998overdispersion}
+Hinde, J. and Dem{\'e}trio, C.~G. (1998).
+\newblock Overdispersion: models and estimation.
+\newblock {\em Computational statistics \& data analysis}, 27(2):151--170.
+
+\bibitem[Hu et~al., 2018]{hu2018zero}
+Hu, T., Gallins, P., and Zhou, Y.-H. (2018).
+\newblock A zero-inflated beta-binomial model for microbiome data analysis.
+\newblock {\em Stat}, 7(1):e185.
+
+\bibitem[Johnson et~al., 2005]{johnson2005univariate}
+Johnson, N.~L., Kemp, A.~W., and Kotz, S. (2005).
+\newblock {\em Univariate discrete distributions}, volume 444.
+\newblock John Wiley \& Sons.
+
+\bibitem[Karno et~al., 2021]{karno2021effect}
+Karno, M.~P., Rawson, R., Rogers, B., Spear, S., Grella, C., Mooney, L.~J.,
+  Saitz, R., Kagan, B., and Glasner, S. (2021).
+\newblock Effect of screening, brief intervention and referral to treatment for
+  unhealthy alcohol and other drug use in mental health treatment settings: a
+  randomized controlled trial.
+\newblock {\em Addiction}, 116(1):159--169.
+
+\bibitem[Kwok et~al., 2007]{kwok2007impact}
+Kwok, O.-m., West, S.~G., and Green, S.~B. (2007).
+\newblock The impact of misspecifying the within-subject covariance structure
+  in multiwave longitudinal multilevel models: A monte carlo study.
+\newblock {\em Multivariate Behavioral Research}, 42(3):557--592.
+
+\bibitem[Lambert, 1992]{lambert1992zero}
+Lambert, D. (1992).
+\newblock Zero-inflated poisson regression, with an application to defects in
+  manufacturing.
+\newblock {\em Technometrics}, 34(1):1--14.
+
+\bibitem[Lange and Laird, 1989]{lange1989effect}
+Lange, N. and Laird, N.~M. (1989).
+\newblock The effect of covariance structure on variance estimation in balanced
+  growth-curve models with random parameters.
+\newblock {\em Journal of the American Statistical Association},
+  84(405):241--247.
+
+\bibitem[Lee et~al., 2006]{lee2006multi}
+Lee, A.~H., Wang, K., Scott, J.~A., Yau, K.~K., and McLachlan, G.~J. (2006).
+\newblock Multi-level zero-inflated poisson regression modelling of correlated
+  count data with excess zeros.
+\newblock {\em Statistical methods in medical research}, 15(1):47--61.
+
+\bibitem[Lewandowski et~al., 2009]{lewandowski2009generating}
+Lewandowski, D., Kurowicka, D., and Joe, H. (2009).
+\newblock Generating random correlation matrices based on vines and extended
+  onion method.
+\newblock {\em Journal of multivariate analysis}, 100(9):1989--2001.
+
+\bibitem[Liechty et~al., 2004]{liechty2004bayesian}
+Liechty, J.~C., Liechty, M.~W., and M{\"u}ller, P. (2004).
+\newblock Bayesian correlation estimation.
+\newblock {\em Biometrika}, 91(1):1--14.
+
+\bibitem[Liu and Tian, 2015]{liu2015type}
+Liu, Y. and Tian, G.-L. (2015).
+\newblock Type i multivariate zero-inflated poisson distribution with
+  applications.
+\newblock {\em Computational Statistics \& Data Analysis}, 83:200--222.
+
+\bibitem[Min and Agresti, 2005]{min2005random}
+Min, Y. and Agresti, A. (2005).
+\newblock Random effect models for repeated measures of zero-inflated count
+  data.
+\newblock {\em Statistical modelling}, 5(1):1--19.
+
+\bibitem[Mullahy, 1986]{mullahy1986specification}
+Mullahy, J. (1986).
+\newblock Specification and testing of some modified count data models.
+\newblock {\em Journal of econometrics}, 33(3):341--365.
+
+\bibitem[Neelon et~al., 2010]{neelon2010bayesian}
+Neelon, B.~H., O’Malley, A.~J., and Normand, S.-L.~T. (2010).
+\newblock A bayesian model for repeated measures zero-inflated count data with
+  application to outpatient psychiatric service use.
+\newblock {\em Statistical modelling}, 10(4):421--439.
+
+\bibitem[Preisser et~al., 2016]{preisser2016marginalized}
+Preisser, J.~S., Das, K., Long, D.~L., and Divaris, K. (2016).
+\newblock Marginalized zero-inflated negative binomial regression with
+  application to dental caries.
+\newblock {\em Statistics in medicine}, 35(10):1722--1735.
+
+\bibitem[{R Core Team}, 2023]{rsoftware}
+{R Core Team} (2023).
+\newblock {\em R: A Language and Environment for Statistical Computing}.
+\newblock R Foundation for Statistical Computing, Vienna, Austria.
+
+\bibitem[Ridout et~al., 1998]{ridout1998models}
+Ridout, M., Dem{\'e}trio, C.~G., and Hinde, J. (1998).
+\newblock Models for count data with many zeros.
+\newblock In {\em Proceedings of the XIXth international biometric conference},
+  volume~19, pages 179--192. International Biometric Society Invited Papers
+  Cape Town, South Africa.
+
+\bibitem[Rodrigues, 2003]{rodrigues2003bayesian}
+Rodrigues, J. (2003).
+\newblock Bayesian analysis of zero-inflated distributions.
+\newblock {\em Communications in Statistics-Theory and Methods},
+  32(2):281--289.
+
+\bibitem[Saitz et~al., 2014]{saitz2014screening}
+Saitz, R., Palfai, T.~P., Cheng, D.~M., Alford, D.~P., Bernstein, J.~A.,
+  Lloyd-Travaglini, C.~A., Meli, S.~M., Chaisson, C.~E., and Samet, J.~H.
+  (2014).
+\newblock Screening and brief intervention for drug use in primary care: the
+  aspire randomized clinical trial.
+\newblock {\em Jama}, 312(5):502--513.
+
+\bibitem[Spiegelhalter, 1998]{spiegelhalter1998bayesian}
+Spiegelhalter, D.~J. (1998).
+\newblock Bayesian graphical modelling: a case-study in monitoring health
+  outcomes.
+\newblock {\em Journal of the Royal Statistical Society Series C: Applied
+  Statistics}, 47(1):115--133.
+
+\bibitem[Tetrault et~al., 2020]{tetrault2020computerized}
+Tetrault, J.~M., Holt, S.~R., Cavallo, D.~A., O’Connor, P.~G., Gordon, M.~A.,
+  Corvino, J.~K., Nich, C., and Carroll, K.~M. (2020).
+\newblock Computerized cognitive behavioral therapy for substance use disorders
+  in a specialized primary care practice: A randomized feasibility trial to
+  address the rt component of sbirt.
+\newblock {\em Journal of Addiction Medicine}, 14(6):e303--e309.
+
+\bibitem[Vehtari et~al., 2023]{loopackage}
+Vehtari, A., Gabry, J., Magnusson, M., Yao, Y., Bürkner, P.-C., Paananen, T.,
+  and Gelman, A. (2023).
+\newblock loo: Efficient leave-one-out cross-validation and waic for bayesian
+  models.
+\newblock R package version 2.6.0.
+
+\bibitem[Vehtari et~al., 2017]{vehtari2017practical}
+Vehtari, A., Gelman, A., and Gabry, J. (2017).
+\newblock Practical bayesian model evaluation using leave-one-out
+  cross-validation and waic.
+\newblock {\em Statistics and computing}, 27:1413--1432.
+
+\bibitem[Weiss, 2005]{weiss2005modeling}
+Weiss, R.~E. (2005).
+\newblock {\em Modeling longitudinal data}, volume~1.
+\newblock Springer.
+
+\bibitem[Wen et~al., 2024]{wen2024bayesian}
+Wen, C.-C., Baker, N., Paul, R., Hill, E., Hunt, K., Li, H., Gray, K., and
+  Neelon, B. (2024).
+\newblock A bayesian zero-inflated beta-binomial model for longitudinal data
+  with group-specific changepoints.
+\newblock {\em Statistics in Medicine}, 43(1):125--140.
+
+\bibitem[Wolfinger, 1996]{wolfinger1996heterogeneous}
+Wolfinger, R.~D. (1996).
+\newblock Heterogeneous variance: covariance structures for repeated measures.
+\newblock {\em Journal of agricultural, biological, and environmental
+  statistics}, pages 205--230.
+
+\bibitem[Wu et~al., 2023]{wu2023multivariate}
+Wu, Q., Tian, G.-L., Li, T., Tang, M.-L., and Zhang, C. (2023).
+\newblock The multivariate component zero-inflated poisson model for correlated
+  count data analysis.
+\newblock {\em Australian \& New Zealand Journal of Statistics},
+  65(3):234--261.
+
+\bibitem[Yau and Lee, 2001]{yau2001zero}
+Yau, K.~K. and Lee, A.~H. (2001).
+\newblock Zero-inflated poisson regression with random effects to evaluate an
+  occupational injury prevention programme.
+\newblock {\em Statistics in medicine}, 20(19):2907--2920.
+
+\bibitem[Zhang et~al., 2006]{zhang2006sampling}
+Zhang, X., Boscardin, W.~J., and Belin, T.~R. (2006).
+\newblock Sampling correlation matrices in bayesian models with correlated
+  latent variables.
+\newblock {\em Journal of Computational and Graphical Statistics},
+  15(4):880--896.
+
+\end{thebibliography}

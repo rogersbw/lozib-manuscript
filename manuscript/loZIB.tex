@@ -51,20 +51,6 @@
  We develop a class of longitudinal overdispersed zero-inflated binomial (LOZIB) models for use in overdispersed repeated measures count data with a large number of zero observations. These LOZIB models extend previous zero-inflated regression models by incorporating observation-level random effects (OLRE), which allow more flexibility to account for excess variability as well as correlation over time through the specification of within-individual covariance models. We present an analysis of the number of days of heavy drinking in a study of screening, brief intervention, and referral to treatment (SBIRT) using LOZIB models with 10 different covariance models, and show all of them to outperform previously developed subject level random intercept zero-inflated models. These models are implemented in a Bayesian framework using Stan software.
 \end{abstract}
 
-\section{To Do:}
-
-\subsection{Analysis}
-\begin{itemize}
-	\item Add new models to plot
-	\item Add raw data to plot
-	\item switch to UN preferred model
-	\item Add writing to reflect these changes
-	\item Review all writing from beginning to make sure everything reflects new state of the analysis.
-	
-\end{itemize}
-
-
-
 \section{Introduction}
 \label{s:intro}
 
@@ -75,7 +61,7 @@ Our interest is in estimating the effect of a Screening, Brief Intervention and 
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=1]{inflation_all_plot.pdf}
+	\includegraphics[scale=1]{figures/inflation_all_plot.pdf}
 	\caption{Self-reported days out of the previous 90 in which subjects engaged in heavy drinking at baseline and 3, 6 and 12 month follow-ups. The distribution of responses is both zero-inflated and over-dispersed.}
 	\label{fig:inflation}
 \end{figure}
@@ -310,7 +296,7 @@ Figure \ref{fig:DoDplots} gives difference of differences (DoD) for all seven ZI
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[scale=.5]{DoDAllPlots.pdf}
+	\includegraphics[scale=.5]{figures/DoDAllPlots.pdf}
 	\caption{\textbf{Top:} Difference of differences (DoD) in mean days of heavy drinking measured as difference in change from baseline at each of the three follow up visits. Negative values indicate SBIRT group exhibited greater reductions in heavy drinking than control group. \textbf{Bottom left:} DoD in mean days of heavy drinking coming only from the count model, i.e., only among subjects who were deemed to be heavy drinkers. \textbf{Bottom right:} DoD in probability of being a heavy drinker coming from the zero model. Estimates and 95\% Bayesian credible intervals (CrI) are given for all seven ZIB models. The random intercept model (RI), given in blue, and the autoregressive constant variance model (ARcv), given in orange, are bolded for emphasis.}
 	\label{fig:DoDplots}
 \end{figure}
@@ -393,7 +379,7 @@ The bottom portion of Table \ref{tab:dodmean} gives posterior estimates and CrIs
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[scale=.5]{MeanAllPlots.pdf}
+	\includegraphics[scale=.5]{figures/MeanAllPlots.pdf}
 	\caption{\textbf{Top:} Posterior means and 95\% CrIs for mean days of heavy drinking per 90 days for each of the 7 fitted models for both SBIRT (Trt) and control (Ctrl) groups. Both treatment groups are estimated to have reductions in days of heavy drinking according to all models. \textbf{Bottom left:} Mean days of heavy drinking coming only from the count model, that is, only among subjects who were deemed to be heavy drinkers. \textbf{Bottom right:} Posterior means and 95\% CrIs for probability of being a heavy drinker at each visit for both treatment groups. In all plots, the random intercept model (RI), given in blue, and the autoregressive constant variance model (ARcv), given in orange, are bolded for emphasis.}
 	\label{fig:meanplots}
 \end{figure}
@@ -418,6 +404,6 @@ Overdispersed longitudinal zero-inflated data can occur in many settings beyond 
 
 \section{References}
 
-\bibliography{LOZIB}
+\bibliography{lozib}
 
 \end{document}
