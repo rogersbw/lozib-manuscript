@@ -13,6 +13,9 @@
 \usepackage{hyperref}
 \usepackage{multirow}
 \usepackage{bbm}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\newcolumntype{d}{S[table-format=3.2]}
 
 
 \DeclareMathOperator*{\argmin}{argmin}
@@ -227,6 +230,24 @@ for the zero model random intercepts and count model random effects were given h
 
 \section{SBIRT Data Analysis}
 
+\begin{enumerate}
+	\item Model Fit
+	\begin{enumerate}
+		\item Compare the LOO-IC of different models\\
+		\item INDcv is the best - this model accounts for overdispersion, but has no correlation between random effects at each time point.\\
+		\item Compare fit between RI and INDcv - how well do they model the data\\
+		\item Next question is, what is the difference between them, why is INDcv doing so much better
+		\item Also, why INDcv and not a correlated model. What are correlation posteriors? From AR, AD, models
+		\item How does dispersion compare between INDcv and RI?
+		\begin{itemize}
+			\item What is the variance estimate from each of the models?
+			\item What do they each estimate as the in-sample mean of the data? (Mean use and CrI's, do they cover the observed data?)\\
+			\item Out of sample means and CrIs - do these cover the observed data?
+			\item mean and variance from data, mean and variance of predictions from RI and INDcv models
+		\end{itemize}
+	\end{enumerate}
+\end{enumerate}
+
 We demonstrate the models of the previous section on the SBIRT data set, in which the main outcome of interest is number of days of heavy drinking over the previous $90$ days. We fit LOZIB models with 10 different covariance models: independence (IND), independence constant variance (INDcv), compound symmetry (CS), compound symmetry constant variance (CScv), autogregressive (AR), autoregressive constant variance (ARcv), antedependent (AD), antedependent constant variance (ADcv), unstructured (UN), and unstructured constant variance (UNcv). We also include the RI model presented in section \ref{sec: rimodel} (2RI) as well as a one random intercept model, which shares a single random intercept differing by a scaling factor between the zero and count models.
 
 Fixed effect regression coefficients for the zero and count models $\bm{\beta}_{1}$ and $\bm{\beta}_{2}$, are vectors of length 7, corresponding to indicators for the 4 visits and 3 treatment group differences at the 3, 6, and 12 month follow-ups. We assumed no difference between treatment groups at baseline as groups were randomized before intervention.
@@ -234,38 +255,33 @@ Fixed effect regression coefficients for the zero and count models $\bm{\beta}_{
 Each model was run with 4 Markov chains, each consisting of 20,000 samples after 5,000 burn-in iterations. All models had satisfactory convergence based on trace plots, autocorrelations and $\hat{R}$ statistics \cite{gelman1992inference}.
 
 \subsection{Model Fit}
-We compare model fit between the 12 different models using Bayesian approximate leave-one-out cross-validation (LOO) \citep{vehtari2017practical}. Table \ref{tab:loo} gives LOO information criterion (LOO-IC) estimates and standard errors coming from the pareto-smoothed approximation used by the \proglang{loo} package in R \citep{loopackage}. Values in the table are -2 times the LOO as defined by \cite{vehtari2017practical} to be on the deviance scale, thus smaller values indicate improved fit. The 10 models with observation level random effects fit the SBIRT data substantially better than the random intercept models, however the difference between the OLRE models were small. Still, we select the unstructured (UN) model as the best fitting model. 
+We compare model fit between the 12 different models using Bayesian approximate leave-one-out cross-validation (LOO) \citep{vehtari2017practical}. Table \ref{tab:loo} gives LOO information criterion (LOO-IC) estimates and standard errors coming from the pareto-smoothed approximation used by the \proglang{loo} package in R \citep{loopackage}. Values in the table are -2 times the LOO as defined by \cite{vehtari2017practical} to be on the deviance scale, thus smaller values indicate improved fit. The 10 models with observation level random effects fit the SBIRT data substantially better than the random intercept models, however the difference between OLRE models were small. Still, we select the unstructured (UN) model as the best fitting model. 
 
-%\begin{figure}
-%	\centering
-%	\includegraphics[scale=.35]{looplot.pdf}
-%	\caption{Approximate leave-one-out cross-validation (LOO) estimates and confidence intervals for the seven ZIB models fit to the SBIRT data. Lower LOO indicates a better fit. The models are displayed in ascending order by LOO estimates. All six LOZIB models (orange) fit the SBIRT data much better than the random intercept (RI) mode (blue). There is little difference in fit between the six different covariance models used with the LOZIB models. }
-%	\label{fig:loo}
-%\end{figure}
-
-\begin{table}[ht]
+\begin{table}
+	\caption{Pareto smoothed approximate leave-one-out cross-validation information criterion (LOO-IC) estimates for LOZIB models fit to the SBIRT data. LOO-IC are given for each of the 12 covariance models for each substance outcome. The models are displayed in ascending order by LOO estimates. All ten observation level random effect LOZIB models fit the SBIRT data considerably better than the random intercept models. Differences between the observation level random effect models were small.}
 	\centering
-	\begin{tabular}{rcc}
-		\hline
-		& LOO-IC & Std. Err.\\ 
-		\hline
-		 UN & 7,516 & 147\\ 
-		 INDcv& 7,528 & 147\\
-		 AD & 7,550 & 146\\
-		 UNcv & 7,562 & 150\\
-		  IND & 7,562 & 149 \\
-		 ADcv& 7,565 & 151\\
-		 CScv & 7,583 & 151\\
-		 ARcv& 7,584 & 152\\
-		 AR& 7,617 & 152\\
-		 CScv & 7,623 & 152\\
-		 2RI& 16,830 & 815\\
-		 1RI&16,929 & 819 \\
-		 \hline
+	\begin{tabular}[t]{lrrrr}
+		\toprule
+		Model & Heavy Drinking & Any Alcohol& Stimulants & Marijuana\\
+		\midrule
+		INDcv & 7,526 & 12,397 & 4,348 & 7,699\\
+		UN & 7,529 & 12,267 & 4,321 & 7,659\\
+		AD & 7,531 & 12,318 & 4,429 & 7,601\\
+		UNcv & 7,549 & 12,296 & 4,337 & 7,591\\
+		IND & 7,559 & 12,361 & 4,350 & 7,740\\
+		ADcv & 7,569 & 12,286 & 4,361 & 7,537\\
+		ARcv & 7,588 & 12,325 & 4,341 & 7,551\\
+		CScv & 7,591 & 12,355 & 4,419 & 7,729\\
+		CS & 7,616 & 12,361 & 4,433 & 7,764\\
+		AR & 7,622 & 12,288 & 4,443 & 7,609\\
+		\addlinespace
+		2RI & 16,874 & 33,666 & 12,182 & 38,003\\
+		1RI & 16,907 & 33,919 & 12,172 & 38,213\\
+		\bottomrule
 	\end{tabular}
-	\caption{Pareto smoothed approximate leave-one-out cross-validation information criterion (LOO-IC) estimates and standard errors for LOZIB models fit to the SBIRT data. Lower LOO-CV indicates a better fit. The models are displayed in ascending order by LOO estimates. All ten OLRE LOZIB models fit the SBIRT data considerably better than the random intercept models. Estimates and standard errors suggest there is little difference in fit between the 10 different covariance models used with the LOZIB models.}
 	\label{tab:loo}
 \end{table}
+
 %\begin{table}[ht]
 %	\caption{UN model mean estimates and 95\% Bayesian CrI from zero and count models for each treatment group at each time point for SBIRT data.  Zero model estimates are proportion of subjects that engage in heavy alcohol use, count model estimates are the expected number of days per 90 of heavy alcohol use among users. Middle portion gives mean DoD estimates for each part of the hurdle model at each time point as well as the average across all follow-up time points (All F-U).  $\psi$ is the parameter modeling the dependency between zero and count models.}
 %	\centering
