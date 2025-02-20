@@ -27,6 +27,19 @@ features_trt <- sbirt |> filter(group == 1) |> select(id, starts_with("visit"))
 #### INDcv model
 ##################
 
+set.seed(9731)
+
+indcv_post <- post_means("heavy", "indcv")
+indcv_DoD <- calc_DoD(indcv_post$mu_est)
+
+
+#indcv_post_predict <- data.frame(post_predict(indcv_post$theta_est, indcv_post$pi_est))
+colnames(indcv_post_predict) <- c("visit1", "visit2", "visit3", "visit4", "visit2trt", "visit3trt", "visit4trt")
+
+ggplot(data = indcv_post_predict, aes(x = visit1)) + 
+  geom_density(color = "darkblue", fill = "lightblue")
+
+
 
 # First load in INDcv and RI model results
 indcv_post <- extract_draws("heavy", "indcv")

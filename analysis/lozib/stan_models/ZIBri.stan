@@ -32,7 +32,7 @@ transformed parameters {
   }
   
   
-      for(n in 1:N){
+  for(n in 1:N){
     if (y[n] == 0) {
       log_lik[n] = log_sum_exp(bernoulli_lpmf(0 | theta[n]),
                             bernoulli_lpmf(1 | theta[n])
