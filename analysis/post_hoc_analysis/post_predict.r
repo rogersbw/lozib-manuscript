@@ -29,7 +29,41 @@ features_trt <- sbirt |> filter(group == 1) |> select(id, starts_with("visit"))
 
 set.seed(9731)
 
+
+### First let's look at posterior mean estimates from RI and INDcv models
+
 indcv_post <- post_means("heavy", "indcv")
+indcv_mean <- post_summary_means(indcv_post$mu_est)
+indcv_mean
+
+paste0(round(indcv_mean$avg, 2), " (", round(indcv_mean$lower, 2), ", ", round(indcv_mean$upper, 2), ")")
+
+rm(indcv_post)
+
+ri_post <- post_means("heavy", "ri")
+ri_mean <- post_summary_means(ri_post$mu_est)
+
+paste0(round(ri_mean$avg, 2), " (", round(ri_mean$lower, 2), ", ", round(ri_mean$upper, 2), ")")
+
+
+rm(ri_post)
+
+ar_post <- post_means("heavy", "ar")
+ar_mean <- post_summary_means(ar_post$mu_est)
+
+# Observed Data means:
+
+# Baseline mean
+baseline <- sbirt |> filter(visit == 1)
+mean(baseline$heavy, na.rm = TRUE)
+
+# Follow-up means
+sbirt |> filter(visit > 1) |> group_by(visit, group) |> summarise(mean_heavy = mean(heavy, na.rm = TRUE))
+
+
+
+## Let's get a data frame of mean, lower, and upper bounds for each model and each substance
+
 indcv_DoD <- calc_DoD(indcv_post$mu_est)
 
 

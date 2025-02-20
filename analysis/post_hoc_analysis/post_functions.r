@@ -92,8 +92,8 @@ post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
 
   #For treatment group
   for (t in 1:3){
-    theta_est[, , t + 4] <- expit(beta1[, t] + beta1[, t + 4] + gam1_scaled)
-    pi_est[, , t + 4] <- expit(beta2[,t] + beta2[, t + 4] + psi_scaled + outer(sigma2[, t], gam2[, t]))
+    theta_est[, , t + 4] <- expit(beta1[, t + 1] + beta1[, t + 4] + gam1_scaled)
+    pi_est[, , t + 4] <- expit(beta2[,t + 1] + beta2[, t + 4] + psi_scaled + outer(sigma2[, t], gam2[, t]))
     mu_est[, , t + 4] <- theta_est[, , t + 4] * pi_est[, , t + 4] * 90
   }
   
