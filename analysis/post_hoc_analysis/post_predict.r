@@ -61,6 +61,29 @@ mean(baseline$heavy, na.rm = TRUE)
 sbirt |> filter(visit > 1) |> group_by(visit, group) |> summarise(mean_heavy = mean(heavy, na.rm = TRUE))
 
 
+### Function to get plot of all models
+## Step 1: Create data frame with model, outcome, mean, lb, and ub
+
+model_list <- c("ri", "rifactor", "ind", "indcv", "cs", "cscv", "ar", "arcv", "ad", "adcv", "un", "uncv")
+outcomes <- c("heavy", "alc", "stim", "thc")
+visits <- c("visit1", "visit2", "visit3", "visit4", "visit2trt", "visit3trt", "visit4trt")
+post_summary_df <- structure(list(model = character(), outcome = character(), est = character(), avg = numeric(), lower = numeric(), upper = numeric()), class = "data.frame")
+
+for (outcome in outcomes) {
+  for (model in model_list){
+    post <- post_means(outcome, model)
+    post_summary <- post_summary_means(post$mu_est)
+    post_summary_df <- rbind(post_summary_df,
+                             data.frame(model = model,
+                                        outcome = outcome,
+                                        est = visits,
+                                        avg = post_summary$avg,
+                                        lower = post_summary$lower,
+                                        upper = post_summary$upper))
+  
+  }
+}
+
 
 ## Let's get a data frame of mean, lower, and upper bounds for each model and each substance
 

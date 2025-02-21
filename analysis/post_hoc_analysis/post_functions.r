@@ -17,6 +17,8 @@ expit <- function(x) {
   exp(x) / (1 + exp(x))
 }
 
+
+## Function takes the stan draws and extracts the relevant parameters for the model
 extract_draws <- function(outcome, model_name){
   if(!is.character(model_name) || !is.character(outcome)){
       stop("model_name and outcome name must be character strings")
@@ -36,24 +38,37 @@ extract_draws <- function(outcome, model_name){
   gamma1 <- select(post_df, starts_with("gamma1"))
   gamma2 <- select(post_df, starts_with("gamma2"))
 
-  if(model_name %in% c("ri", "rifactor")){
-    return(list(beta1 = beta1, beta2 = beta2, sigma1 = sigma1, sigma2 = sigma2, psi = psi, gamma1 = gamma1, gamma2 = gamma2))
+  params <- list(beta1 = beta1, beta2 = beta2, sigma1 = sigma1, sigma2 = sigma2, psi = psi, gamma1 = gamma1)
+
+  if (model_name %in% c("ri", "rifactor")){
+    params <- append(params, list(gamma2 = gamma2))
   }
-  if(model_name %in% c("ind", "indcv", "cs", "cscv", "ar", "arcv", "ad", "adcv", "un", "uncv")){
+  if (model_name %in% c("ind", "indcv", "cs", "cscv", "ar", "arcv", "ad", "adcv", "un", "uncv")){
     gamma2_1 <- select(gamma2, ends_with(".1."))
     gamma2_2 <- select(gamma2, ends_with(".2."))
     gamma2_3 <- select(gamma2, ends_with(".3."))
     gamma2_4 <- select(gamma2, ends_with(".4."))
-    return(list(beta1 = beta1, beta2 = beta2, sigma1 = sigma1, sigma2 = sigma2, psi = psi, gamma1 = gamma1, gamma2_1 = gamma2_1, gamma2_2 = gamma2_2, gamma2_3 = gamma2_3, gamma2_4 = gamma2_4))
+
+    params <- append(params, list(gamma2_1 = gamma2_1, gamma2_2 = gamma2_2, gamma2_3 = gamma2_3, gamma2_4 = gamma2_4))
+
+    if (model_name %in% c("ar", "arcv", "ad", "adcv")){
+        rho <- select(post_df, starts_with("rho"))
+
+        params <- append(params, list(rho = rho))
+    }
+    if (model_name %in% c("un", "uncv")){
+        L_omega <- select(post_df, starts_with("L_omega"))
+
+        params <- append(params, list(L_omega = L_omega))
+    }
   }
-  else{
-    stop("model not found")
-  }
+  return(params)
 }
 
 
 # To generate draws of zero-inflated model parameters
 # Returns posterior samples for theta_est, pi_est, and mu_est
+# Need to construct AR, AD and UN gammas
 post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
 
   post_draws <- extract_draws(outcome, model)
