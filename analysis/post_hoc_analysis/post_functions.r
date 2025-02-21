@@ -65,6 +65,53 @@ extract_draws <- function(outcome, model_name){
   return(params)
 }
 
+# Function to transform gamma draws for cs model
+transform_cs <- function(gam2, sigma2, sigma2_cs) {
+  gam2_scaled <- list()
+  gam2_cs <- rnorm(dim(gam2)[1])
+  gam2_cs <- outer(sigma2_cs, gam2_cs)
+  for (t in 1:dim(gam2)[2]){
+    gam2_scaled[[t]] <- outer(sigma2[,t], gam2[,t]) + gam2_cs 
+}
+
+transform_ind <- function(gam2, sigma2) {
+  gam2_scaled <- list()
+  for (t in 1:dim(gam2)[2]){
+    gam2_scaled[[t]] <- outer(sigma2[,t], gam2[,t])
+  }
+  return(gam2_scaled)
+}
+
+transform_ar <- function(gam2, sigma2, rho, cv = FALSE) {
+  gam2_scaled <- list()
+  if(cv) {
+    sigma2[, 1] <- sigma2[, 1]/sqrt(1-rho^2)
+  }
+  gam2_scaled[[1]] <- outer(sigma2[,1], gam2[,1]) 
+  for (t in 2:dim(gam2)[2]){
+    gam2_scaled[[t]] <- rho * gam2_scaled[[t-1]] + outer(sigma2 [, t], gam2[,t])
+  }
+  return(gam2_scaled)
+}
+
+transform_ad <- function(gam2, sigma2, rho, cv = FALSE) {
+  gam2_scaled <- list()
+  if(cv) {
+    sigma2[, 1] <- sigma2[, 1]/sqrt(1-rho[,1]^2)
+  }
+  gam2_scaled[[1]] <- outer(sigma2[,1], gam2[,1]) 
+  for (t in 2:dim(gam2)[2]){
+    gam2_scaled[[t]] <- rho[, t-1] * gam2_scaled[[t-1]] + outer(sigma2 [, t], gam2[,t])
+  }
+  return(gam2_scaled)
+}
+
+#transform_un <- function(gam2, sigma2, L_omega, cv=FALSE) {
+# In this we probably want to got through the gam samples one by one and chol multiply each one,
+# We can build out an array, n_post, n_gamma_samples, n_time_points
+# Should switch the others to also return this array.
+#}
+
 
 # To generate draws of zero-inflated model parameters
 # Returns posterior samples for theta_est, pi_est, and mu_est
@@ -77,7 +124,6 @@ post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
   pi_est <- array(data = NA, c(iter, gam_draws, 7))
   theta_est <- array(data = NA, c(iter, gam_draws, 7))
   mu_est <- array(data = NA, c(iter, gam_draws, 7))
-  
   gam1 <- rnorm(gam_draws)
 
   if (model %in% c("ri", "rifactor")) {
@@ -98,6 +144,7 @@ post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
 
   gam1_scaled <- outer(sigma1[, 1], gam1)
   psi_scaled <- outer(psi[, 1], gam1)
+
   #For control group
   for (t in 1:4){
     theta_est[, , t] <- expit(beta1[,t] + gam1_scaled)
@@ -108,7 +155,7 @@ post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
   #For treatment group
   for (t in 1:3){
     theta_est[, , t + 4] <- expit(beta1[, t + 1] + beta1[, t + 4] + gam1_scaled)
-    pi_est[, , t + 4] <- expit(beta2[,t + 1] + beta2[, t + 4] + psi_scaled + outer(sigma2[, t], gam2[, t]))
+    pi_est[, , t + 4] <- expit(beta2[,t + 1] + beta2[, t + 4] + psi_scaled + outer(sigma2[, t + 1], gam2[, t + 1]))
     mu_est[, , t + 4] <- theta_est[, , t + 4] * pi_est[, , t + 4] * 90
   }
   
