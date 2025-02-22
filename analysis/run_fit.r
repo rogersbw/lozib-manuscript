@@ -45,7 +45,7 @@ params <- c("beta1", "beta2", "sigma1", "sigma2")
 if (covmod %in% c("ri", "ind", "indcv")) {
   params <- c(params, "psi")
 }else if (covmod %in% c("un", "uncv")) {
-  params <- c(params, "psi", "L_omega")
+  params <- c(params, "psi", "L_Omega")
 }else if (covmod %in% c("cs", "cscv")) {
   params <- c(params, "psi", "sigma2_cs")
 }else if (covmod %in% c("ar", "arcv", "ad", "adcv")) {
