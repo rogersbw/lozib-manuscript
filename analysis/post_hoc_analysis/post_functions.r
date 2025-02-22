@@ -20,8 +20,8 @@ expit <- function(x) {
 
 ## Function takes the stan draws and extracts the relevant parameters for the model
 extract_draws <- function(outcome, model_name){
-  if(!is.character(model_name) || !is.character(outcome)){
-      stop("model_name and outcome name must be character strings")
+  if (!is.character(model_name) || !is.character(outcome)){
+    stop("model_name and outcome name must be character strings")
   }
   draws_path <- file.path(proj_path,paste0("analysis/fit_results/parameter_draws/draws_", outcome, "_", model_name, ".rds"))
   post <- readRDS(draws_path)
@@ -52,14 +52,14 @@ extract_draws <- function(outcome, model_name){
     params <- append(params, list(gamma2_1 = gamma2_1, gamma2_2 = gamma2_2, gamma2_3 = gamma2_3, gamma2_4 = gamma2_4))
 
     if (model_name %in% c("ar", "arcv", "ad", "adcv")){
-        rho <- select(post_df, starts_with("rho"))
+      rho <- select(post_df, starts_with("rho"))
 
-        params <- append(params, list(rho = rho))
+      params <- append(params, list(rho = rho))
     }
     if (model_name %in% c("un", "uncv")){
-        L_omega <- select(post_df, starts_with("L_omega"))
+      L_omega <- select(post_df, starts_with("L_omega"))
 
-        params <- append(params, list(L_omega = L_omega))
+      params <- append(params, list(L_omega = L_omega))
     }
   }
   return(params)
@@ -67,52 +67,55 @@ extract_draws <- function(outcome, model_name){
 
 # Function to transform gamma draws for cs model
 transform_cs <- function(gam2, sigma2, sigma2_cs) {
-  gam2_scaled <- list()
+  gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
   gam2_cs <- rnorm(dim(gam2)[1])
   gam2_cs <- outer(sigma2_cs, gam2_cs)
-  for (t in 1:dim(gam2)[2]){
-    gam2_scaled[[t]] <- outer(sigma2[,t], gam2[,t]) + gam2_cs 
-}
+  for (t in 1:seq_len(dim(gam2)[2])) {
+    gam2_scaled[,, t] <- outer(sigma2[, t], gam2[, t]) + gam2_cs
+  }
   return(gam2_scaled)
 }
 
 transform_ind <- function(gam2, sigma2) {
-  gam2_scaled <- list()
-  for (t in 1:dim(gam2)[2]){
-    gam2_scaled[[t]] <- outer(sigma2[,t], gam2[,t])
+  gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
+  for (t in 1:seq_len(dim(gam2)[2])) {
+    gam2_scaled[,, t] <- outer(sigma2[, t], gam2[, t])
   }
   return(gam2_scaled)
 }
 
 transform_ar <- function(gam2, sigma2, rho, cv = FALSE) {
-  gam2_scaled <- list()
-  if(cv) {
-    sigma2[, 1] <- sigma2[, 1]/sqrt(1-rho^2)
+  gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
+  if (cv) {
+    sigma2[, 1] <- sigma2[, 1] / sqrt(1 - rho^2)
   }
-  gam2_scaled[[1]] <- outer(sigma2[,1], gam2[,1]) 
-  for (t in 2:dim(gam2)[2]){
-    gam2_scaled[[t]] <- rho * gam2_scaled[[t-1]] + outer(sigma2 [, t], gam2[,t])
+  gam2_scaled[,, 1] <- outer(sigma2[, 1], gam2[, 1]) 
+  for (t in 2:seq_len(dim(gam2)[2])) {
+    gam2_scaled[, , t] <- rho * gam2_scaled[,, t-1] + outer(sigma2 [, t], gam2[,t])
   }
   return(gam2_scaled)
 }
 
 transform_ad <- function(gam2, sigma2, rho, cv = FALSE) {
-  gam2_scaled <- list()
-  if(cv) {
-    sigma2[, 1] <- sigma2[, 1]/sqrt(1-rho[,1]^2)
+  gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
+  if (cv) {
+    sigma2[, 1] <- sigma2[, 1] / sqrt(1 - rho[, 1]^2)
   }
-  gam2_scaled[[1]] <- outer(sigma2[,1], gam2[,1]) 
-  for (t in 2:dim(gam2)[2]){
-    gam2_scaled[[t]] <- rho[, t-1] * gam2_scaled[[t-1]] + outer(sigma2 [, t], gam2[,t])
+  gam2_scaled[,, 1] <- outer(sigma2[, 1], gam2[, 1]) 
+  for (t in 2:seq_len(dim(gam2)[2])) {
+    gam2_scaled[,, t] <- rho[, t-1] * gam2_scaled[, , t-1] + outer(sigma2 [, t], gam2[, t])
   }
   return(gam2_scaled)
 }
 
-#transform_un <- function(gam2, sigma2, L_omega, cv=FALSE) {
-# In this we probably want to got through the gam samples one by one and chol multiply each one,
-# We can build out an array, n_post, n_gamma_samples, n_time_points
-# Should switch the others to also return this array.
-#}
+transform_un <- function(gam2, sigma2, L_Omega) {
+  gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
+
+  for (i in 1:seq_len(dim(gam2)[1])) {
+    gam2_scaled[i, , ] <- t(L_Omega %*% t(gam2[i, , ]))
+  }
+  return(gam2_scaled)
+}
 
 
 # To generate draws of zero-inflated model parameters
