@@ -73,6 +73,8 @@ transform_cs <- function(gam2, sigma2, sigma2_cs) {
   for (t in 1:dim(gam2)[2]){
     gam2_scaled[[t]] <- outer(sigma2[,t], gam2[,t]) + gam2_cs 
 }
+  return(gam2_scaled)
+}
 
 transform_ind <- function(gam2, sigma2) {
   gam2_scaled <- list()
@@ -194,7 +196,3 @@ post_predict <- function(theta_draws, pi_draws) {
     }
     return(y_draws)
 }
-
-# For testing
-# test <- post_means("heavy", "indcv")
-# test_post_pred <- post_predict(test$theta_est, test$pi_est)

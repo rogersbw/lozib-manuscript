@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -c 12  # Number of Cores per Task
-#SBATCH --mem=20G  # Requested Memory
+#SBATCH -c 8  # Number of Cores per Task
+#SBATCH --mem=30G  # Requested Memory
 #SBATCH -t 24:00:00  # Job time limit
 #SBATCH -o slurm_output/slurm-%j.out  # %j = job ID
 #SBATCH --mail-type=begin        # send email when job begins
