@@ -26,7 +26,7 @@ extract_draws <- function(outcome, model_name){
   draws_path <- file.path(proj_path,paste0("analysis/fit_results/parameter_draws/draws_", outcome, "_", model_name, ".rds"))
   post <- readRDS(draws_path)
   chains <- dim(post)[2]
-  post_df <- data.frame(post[,1,])
+  post_df <- data.frame(post[, 1,])
   for (i in 2:chains){
     post_df <- rbind(post_df, data.frame(post[,i,]))
   }
@@ -36,11 +36,13 @@ extract_draws <- function(outcome, model_name){
   sigma2 <- select(post_df, starts_with("sigma2"))
   psi <- select(post_df, starts_with("psi"))
   gamma1 <- select(post_df, starts_with("gamma1"))
-  gamma2 <- select(post_df, starts_with("gamma2"))
 
   params <- list(beta1 = beta1, beta2 = beta2, sigma1 = sigma1, sigma2 = sigma2, psi = psi, gamma1 = gamma1)
 
-  if (model_name %in% c("ri", "rifactor")){
+  if (model_name != "rifactor") {
+      gamma2 <- select(post_df, starts_with("gamma2"))
+  }
+  if (model_name == "ri") {
     params <- append(params, list(gamma2 = gamma2))
   }
   if (model_name %in% c("ind", "indcv", "cs", "cscv", "ar", "arcv", "ad", "adcv", "un", "uncv")){
@@ -70,7 +72,7 @@ transform_cs <- function(gam2, sigma2, sigma2_cs) {
   gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
   gam2_cs <- rnorm(dim(gam2)[1])
   gam2_cs <- outer(sigma2_cs, gam2_cs)
-  for (t in 1:seq_len(dim(gam2)[2])) {
+  for (t in seq_len(dim(gam2)[2])) {
     gam2_scaled[,, t] <- outer(sigma2[, t], gam2[, t]) + gam2_cs
   }
   return(gam2_scaled)
@@ -78,32 +80,29 @@ transform_cs <- function(gam2, sigma2, sigma2_cs) {
 
 transform_ind <- function(gam2, sigma2) {
   gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
-  for (t in 1:seq_len(dim(gam2)[2])) {
+  for (t in seq_len(dim(gam2)[2])) {
     gam2_scaled[,, t] <- outer(sigma2[, t], gam2[, t])
   }
   return(gam2_scaled)
 }
 
-transform_ar <- function(gam2, sigma2, rho, cv = FALSE) {
+transform_ar <- function(gam2, sigma2, rho) {
   gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
-  if (cv) {
-    sigma2[, 1] <- sigma2[, 1] / sqrt(1 - rho^2)
-  }
-  gam2_scaled[,, 1] <- outer(sigma2[, 1], gam2[, 1]) 
-  for (t in 2:seq_len(dim(gam2)[2])) {
-    gam2_scaled[, , t] <- rho * gam2_scaled[,, t-1] + outer(sigma2 [, t], gam2[,t])
+  
+  sigma2[, 1] <- sigma2[, 1] / sqrt(1 - rho[,1]^2)
+  gam2_scaled[, , 1] <- outer(sigma2[, 1], gam2[, 1])
+  for (t in seq_len(dim(gam2)[2])[-1]) {
+    gam2_scaled[, , t] <- rho[,1] * gam2_scaled[,, t-1] + outer(sigma2 [, t], gam2[,t])
   }
   return(gam2_scaled)
 }
 
 transform_ad <- function(gam2, sigma2, rho, cv = FALSE) {
   gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
-  if (cv) {
-    sigma2[, 1] <- sigma2[, 1] / sqrt(1 - rho[, 1]^2)
-  }
-  gam2_scaled[,, 1] <- outer(sigma2[, 1], gam2[, 1]) 
-  for (t in 2:seq_len(dim(gam2)[2])) {
-    gam2_scaled[,, t] <- rho[, t-1] * gam2_scaled[, , t-1] + outer(sigma2 [, t], gam2[, t])
+  sigma2[, 1] <- sigma2[, 1] / sqrt(1 - rho[, 1]^2)
+  gam2_scaled[, , 1] <- outer(sigma2[, 1], gam2[, 1])
+  for (t in seq_len(dim(gam2)[2])[-1])  {
+    gam2_scaled[, , t] <- rho[, t-1] * gam2_scaled[, , t-1] + outer(sigma2 [, t], gam2[, t])
   }
   return(gam2_scaled)
 }
@@ -111,8 +110,9 @@ transform_ad <- function(gam2, sigma2, rho, cv = FALSE) {
 transform_un <- function(gam2, sigma2, L_Omega) {
   gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
 
-  for (i in 1:seq_len(dim(gam2)[1])) {
-    gam2_scaled[i, , ] <- t(L_Omega %*% t(gam2[i, , ]))
+  for (i in seq_len(dim(gam2)[1])) {
+    one_L <- matrix(as.numeric(L_Omega[i,]), nrow = dim(gam2)[2], byrow = FALSE)
+    gam2_scaled[i, , ] <- t(diag(sigma2[i,]) %*% one_L %*% t(gam2))
   }
   return(gam2_scaled)
 }
@@ -131,9 +131,7 @@ post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
   mu_est <- array(data = NA, c(iter, gam_draws, 7))
   gam1 <- rnorm(gam_draws)
 
-  if (model %in% c("ri", "rifactor")) {
-    gam2 <- matrix(rep(rnorm(gam_draws), 4), ncol = 4)
-  }else {
+  if (!(model %in% c("ri", "rifactor"))) {
     gam2 <- matrix(rnorm(4 * gam_draws), ncol = 4)
   }
  
@@ -141,26 +139,55 @@ post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
   beta2 <- post_draws$beta2
   sigma1 <- post_draws$sigma1
   sigma2 <- post_draws$sigma2
-  psi <- post_draws$psi
+
+  if(grepl("cs", model)) {
+    sigma2_cs <- sigma2[, ncol(sigma2)]
+    sigma2 <- sigma2[, -ncol(sigma2), drop = FALSE]
+  }
 
   if (grepl("cv$", model) || grepl("ri", model)) {
     sigma2 <- matrix(rep(sigma2[, 1], 4), ncol = 4) 
   }
 
   gam1_scaled <- outer(sigma1[, 1], gam1)
-  psi_scaled <- outer(psi[, 1], gam1)
+  
+  if (model == "rifactor") {
+    psi_scaled <- 0 * sigma1[, 1]
+  } else {
+     psi <- post_draws$psi
+     psi_scaled <- outer(psi[, 1], gam1)
+  }
 
+  if (model == "ri") {
+    gam2 <- rnorm(gam_draws)
+    gam2_scaled <- replicate(4, outer(sigma2[, 1], gam2))
+  } else if (model == "rifactor") {
+    gam2_scaled <- replicate(4, outer(sigma2[, 1], gam1))
+  } else if (model %in% c("cs", "cscv")) {
+    gam2_scaled <- transform_cs(gam2, sigma2, sigma2[, 1])
+  } else if (model %in% c("ind", "indcv")) {
+    gam2_scaled <- transform_ind(gam2, sigma2)
+  } else if (model %in% c("ar", "arcv")) {
+    rho <- post_draws$rho
+    gam2_scaled <- transform_ar(gam2, sigma2, rho)
+  } else if (model %in% c("ad", "adcv")) {
+    rho <- post_draws$rho
+    gam2_scaled <- transform_ad(gam2, sigma2, rho)
+  } else if (model %in% c("un", "uncv")) {
+    L_Omega <- post_draws$L_omega
+    gam2_scaled <- transform_un(gam2, sigma2, L_Omega)
+  }
   #For control group
   for (t in 1:4){
     theta_est[, , t] <- expit(beta1[,t] + gam1_scaled)
-    pi_est[, , t] <- expit(beta2[,t] + psi_scaled + outer(sigma2[, t], gam2[, t]))
+    pi_est[, , t] <- expit(beta2[,t] + psi_scaled + gam2_scaled[, , t])
     mu_est[, , t] <- theta_est[, , t] * pi_est[, , t] * 90
   }
 
   #For treatment group
   for (t in 1:3){
     theta_est[, , t + 4] <- expit(beta1[, t + 1] + beta1[, t + 4] + gam1_scaled)
-    pi_est[, , t + 4] <- expit(beta2[,t + 1] + beta2[, t + 4] + psi_scaled + outer(sigma2[, t + 1], gam2[, t + 1]))
+    pi_est[, , t + 4] <- expit(beta2[,t + 1] + beta2[, t + 4] + psi_scaled + gam2_scaled[,, t + 1])
     mu_est[, , t + 4] <- theta_est[, , t + 4] * pi_est[, , t + 4] * 90
   }
   
