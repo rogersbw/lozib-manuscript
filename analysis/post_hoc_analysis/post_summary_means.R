@@ -19,6 +19,7 @@ post_summary_df <- structure(list(model = character(), outcome = character(), es
   
 for (outcome in outcomes) {
   for (model in model_list) {
+    tryCatch({
     post <- post_means(outcome, model)
     post_summary <- post_summary_means(post$mu_est)
     post_summary_df <- rbind(post_summary_df,
@@ -60,6 +61,11 @@ for (outcome in outcomes) {
                                         upper = post_summary$upper))
     
     rm(post)
+    },  error = function(e) {
+      message("Error in model: ", model, ", outcome: ", outcome)
+      message("Error message: ", e$message)
+      next  # Skip to the next iteration
+    })
   }
 }
 

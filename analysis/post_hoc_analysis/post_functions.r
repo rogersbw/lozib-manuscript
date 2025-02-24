@@ -105,8 +105,8 @@ transform_un <- function(gam2, sigma2, L_Omega) {
   gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
 
   for (i in seq_len(dim(sigma2)[1])) {
-    one_L <- matrix(as.numeric(L_Omega[i,]), nrow = dim(gam2)[2], byrow = FALSE)
-    gam2_scaled[i, , ] <- t(diag(sigma2[i,]) %*% one_L %*% t(gam2))
+    one_L <- matrix(as.numeric(L_Omega[i, ]), nrow = dim(gam2)[2], byrow = FALSE)
+    gam2_scaled[i, , ] <- t(diag(sigma2[i, ]) %*% one_L %*% t(gam2))
   }
   return(gam2_scaled)
 }
