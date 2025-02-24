@@ -10,4 +10,4 @@
 
 module load r-rocker-ml-verse/4.2.3+apptainer
 
-Rscript --no-restore --quiet --no-save post_summary_means.r
+Rscript --no-restore --quiet --no-save post_summary_means.R
