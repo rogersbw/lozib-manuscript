@@ -1,12 +1,6 @@
 require(dplyr)
 # Post processing functions
 
-here::i_am("analysis/post_hoc_analysis/post_functions.r")
-
-proj_path <- here::here()
-
-
-
 # Logit function
 logit <- function(x) { 
   log(x / (1 - x))
@@ -20,10 +14,10 @@ expit <- function(x) {
 
 ## Function takes the stan draws and extracts the relevant parameters for the model
 extract_draws <- function(outcome, model_name){
-  if (!is.character(model_name) || !is.character(outcome)){
+  if (!is.character(model_name) || !is.character(outcome)) {
     stop("model_name and outcome name must be character strings")
   }
-  draws_path <- file.path(proj_path,paste0("analysis/fit_results/parameter_draws/draws_", outcome, "_", model_name, ".rds"))
+  draws_path <- file.path("..", "fit_results", "parameter_draws", paste0("draws_", outcome, "_", model_name, ".rds"))
   post <- readRDS(draws_path)
   chains <- dim(post)[2]
   post_df <- data.frame(post[, 1,])
@@ -110,7 +104,7 @@ transform_ad <- function(gam2, sigma2, rho, cv = FALSE) {
 transform_un <- function(gam2, sigma2, L_Omega) {
   gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
 
-  for (i in seq_len(dim(gam2)[1])) {
+  for (i in seq_len(dim(sigma2)[1])) {
     one_L <- matrix(as.numeric(L_Omega[i,]), nrow = dim(gam2)[2], byrow = FALSE)
     gam2_scaled[i, , ] <- t(diag(sigma2[i,]) %*% one_L %*% t(gam2))
   }
@@ -179,8 +173,8 @@ post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
   }
   #For control group
   for (t in 1:4){
-    theta_est[, , t] <- expit(beta1[,t] + gam1_scaled)
-    pi_est[, , t] <- expit(beta2[,t] + psi_scaled + gam2_scaled[, , t])
+    theta_est[, , t] <- expit(beta1[, t] + gam1_scaled)
+    pi_est[, , t] <- expit(beta2[, t] + psi_scaled + gam2_scaled[, , t])
     mu_est[, , t] <- theta_est[, , t] * pi_est[, , t] * 90
   }
 

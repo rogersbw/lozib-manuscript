@@ -5,12 +5,11 @@ library(ggplot2)
 
 ### Directory organization
 
-here::i_am("analysis/post_hoc_analysis/post_predict.r")
+#here::i_am("analysis/post_hoc_analysis/post_predict.r")
 
-proj_path <- here::here()
+#proj_path <- here::here()
 
-source(file.path(proj_path, "analysis", "post_hoc_analysis", "post_functions.r"))
-
+source("post_functions.r")
 
 model_list <- c("ri", "ind", "indcv", "cs", "cscv", "ar", "arcv", "ad", "adcv", "un", "uncv")
 outcomes <- c("heavy", "alc", "stim", "thc")
@@ -65,4 +64,4 @@ for (outcome in outcomes) {
 }
 
 
-saveRDS(post_summary_df, file.path(proj_path, "analysis", "data", "processed", "post_summary_means.rds"))
+saveRDS(post_summary_df, file.path("..", "data", "processed", "post_summary_means.rds"))
