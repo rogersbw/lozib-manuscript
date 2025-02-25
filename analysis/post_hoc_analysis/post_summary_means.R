@@ -19,9 +19,14 @@ post_summary_df <- structure(list(model = character(), outcome = character(), es
   
 for (outcome in outcomes) {
   for (model in model_list) {
-    tryCatch({
     post <- post_means(outcome, model)
+    tryCatch({
     post_summary <- post_summary_means(post$mu_est)
+    },  error = function(e) {
+      message("Error in model: ", model, ", outcome: ", outcome)
+      message("Error message: ", e$message)
+      next  # Skip to the next iteration
+    })
     post_summary_df <- rbind(post_summary_df,
                              data.frame(model = model,
                                         outcome = outcome,
@@ -30,7 +35,11 @@ for (outcome in outcomes) {
                                         avg = post_summary$avg,
                                         lower = post_summary$lower,
                                         upper = post_summary$upper))
-    post_summary <- post_summary_means(post$theta_est)
+    tryCatch({post_summary <- post_summary_means(post$theta_est)},  error = function(e) {
+      message("Error in model: ", model, ", outcome: ", outcome)
+      message("Error message: ", e$message)
+      next  # Skip to the next iteration
+    })
     post_summary_df <- rbind(post_summary_df,
                              data.frame(model = model,
                                         outcome = outcome,
@@ -40,7 +49,12 @@ for (outcome in outcomes) {
                                         lower = post_summary$lower,
                                         upper = post_summary$upper))
 
-    post_summary <- post_summary_means(post$pi_est)
+    tryCatch({
+    post_summary <- post_summary_means(post$pi_est)},  error = function(e) {
+      message("Error in model: ", model, ", outcome: ", outcome)
+      message("Error message: ", e$message)
+      next  # Skip to the next iteration
+    })
     post_summary_df <- rbind(post_summary_df,
                              data.frame(model = model,
                                         outcome = outcome,
@@ -61,11 +75,6 @@ for (outcome in outcomes) {
                                         upper = post_summary$upper))
     
     rm(post)
-    },  error = function(e) {
-      message("Error in model: ", model, ", outcome: ", outcome)
-      message("Error message: ", e$message)
-      next  # Skip to the next iteration
-    })
   }
 }
 
