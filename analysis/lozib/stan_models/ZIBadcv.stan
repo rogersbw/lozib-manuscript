@@ -20,7 +20,7 @@ array[J, V] real  gamma2z;
 
 real<lower=0> sigma1;
 real<lower=0> sigma2;
-array[V-1] real<lower=0, upper=1> rho;
+array[V-1] real<lower=0, upper=.95> rho;
 real<lower=0> psi;
 }
 
