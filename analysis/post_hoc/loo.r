@@ -1,7 +1,7 @@
 # Script for calculating loo estimates
 library(dplyr)
 library(kableExtra)
-here::i_am("analysis/post_hoc_analysis/loo.r")
+here::i_am("analysis/post_hoc/loo.r")
 setwd(here::here())
 
 outcomes <- c("heavy", "alc", "stim", "thc")

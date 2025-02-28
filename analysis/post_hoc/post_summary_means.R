@@ -5,7 +5,7 @@ library(ggplot2)
 
 ### Directory organization
 
-#here::i_am("analysis/post_hoc_analysis/post_predict.r")
+#here::i_am("analysis/post_hoc/post_predict.r")
 
 #proj_path <- here::here()
 
