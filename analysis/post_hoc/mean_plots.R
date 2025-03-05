@@ -57,7 +57,7 @@ other_heavy_means <- post_summary_df |> filter(outcome == "heavy", est == "avg",
 
 # Add rows to raw_df and heavy_means to connect SBIRT group to baseline
 # Fix legend
-
+# Facet by group
 
 mean_plot <- ggplot(data = heavy_means, aes(x = Month, y = avg)) +
   geom_line(aes(color = model, group=interaction(model, Group), linetype=Group), position = pd, linewidth = 1.5) +
