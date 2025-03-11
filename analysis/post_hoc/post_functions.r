@@ -220,11 +220,11 @@ post_in_sample_mean <- function(outcome, model) {
 
   post_draws <- extract_draws(outcome, model)
 
-  beta1 <- post_draws$beta1
-  beta2 <- post_draws$beta2
-  gam1 <- post_draws$gamma1
+  beta1 <- as.matrix(post_draws$beta1)
+  beta2 <- as.matrix(post_draws$beta2)
+  gam1 <- as.matrix(post_draws$gamma1)
 
-  gam1_scaled <- post_draws$sigma1[, 1] * post_draws$gamma1
+  gam1_scaled <- as.matrix(post_draws$sigma1[, 1] * post_draws$gamma1)
 
   if (model == "rifactor") {
     gam2 <- abind(post_draws$sigma2 * gam1,
@@ -247,8 +247,11 @@ post_in_sample_mean <- function(outcome, model) {
     psi_scaled <- 0
   } else {
     psi <- post_draws$psi
-    psi_scaled <- psi[, 1] * gam1
+    psi_scaled <- as.matrix(psi[, 1] * gam1)
   }
+
+  #For memory efficiency, we can remove post_draws at this point
+  rm(post_draws)
 
   for (t in 1:4){
     theta_est[, , t] <- expit(beta1[, t] + gam1_scaled)
