@@ -1,4 +1,5 @@
 require(dplyr)
+require(abind)
 # Post processing functions
 
 # Logit function
@@ -91,7 +92,7 @@ transform_ar <- function(gam2, sigma2, rho) {
   return(gam2_scaled)
 }
 
-transform_ad <- function(gam2, sigma2, rho, cv = FALSE) {
+transform_ad <- function(gam2, sigma2, rho) {
   gam2_scaled <- array(data = NA, c(dim(sigma2)[1], dim(gam2)[1], dim(gam2)[2]))
   sigma2[, 1] <- sigma2[, 1] / sqrt(1 - rho[, 1]^2)
   gam2_scaled[, , 1] <- outer(sigma2[, 1], gam2[, 1])
@@ -115,7 +116,7 @@ transform_un <- function(gam2, sigma2, L_Omega) {
 # To generate draws of zero-inflated model parameters
 # Returns posterior samples for theta_est, pi_est, and mu_est
 # Need to construct AR, AD and UN gammas
-post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
+post_means <- function(outcome, model, gam_draws = 500) {
 
   post_draws <- extract_draws(outcome, model)
 
@@ -189,25 +190,79 @@ post_means <- function(outcome, model, gam_draws = 500, out_of_sample = TRUE) {
 }
 
 
+
+
+
 ## Take an array of posterior samples (integrating over random effects) and return the mean and 95% credible interval for the mean
 post_summary_means <- function(est_array) {
-    means <- apply(est_array, c(1, 3), mean)
-    avg <- apply(means, 2, mean)
-    lower <- apply(means, 2, quantile, probs = c(.025))
-    upper <- apply(means, 2, quantile, probs = c(.975))
-    return(list(avg = avg, lower = lower, upper = upper))
+  means <- apply(est_array, c(1, 3), mean)
+  avg <- apply(means, 2, mean)
+  lower <- apply(means, 2, quantile, probs = c(.025))
+  upper <- apply(means, 2, quantile, probs = c(.975))
+  return(list(avg = avg, lower = lower, upper = upper))
 }
 
 
 calc_DoD <- function(est) {
     DoD <- array(data = NA, c(dim(est)[1], dim(est)[2], 3))
-    DoD[, , 1] = est[, , 5] - est[, , 2]
-    DoD[, , 2] = est[, , 6] - est[, , 3]
-    DoD[, , 3] = est[, , 7] - est[, , 4]
+    DoD[, , 1] <- est[, , 5] - est[, , 2]
+    DoD[, , 2] <- est[, , 6] - est[, , 3]
+    DoD[, , 3] <- est[, , 7] - est[, , 4]
 
     DoD_summary <- post_summary_means(DoD)
 
     return(DoD_summary)
+}
+
+
+#Posterior in-sample mean
+post_in_sample_mean <- function(outcome, model) {
+
+  post_draws <- extract_draws(outcome, model)
+
+  beta1 <- post_draws$beta1
+  beta2 <- post_draws$beta2
+  gam1 <- post_draws$gamma1
+
+  gam1_scaled <- post_draws$sigma1[, 1] * post_draws$gamma1
+
+  if (model == "rifactor") {
+    gam2 <- abind(post_draws$sigma2 * gam1,
+                  post_draws$sigma2 * gam1,
+                  post_draws$sigma2 * gam1,
+                  post_draws$sigma2 * gam1, along = 3)
+  } else if (model == "ri") {
+    gam2 <- abind(post_draws$gamma2, post_draws$gamma2, post_draws$gamma2, post_draws$gamma2, along = 3)
+  } else {
+    gam2 <- abind(post_draws$gamma2_1, post_draws$gamma2_2, post_draws$gamma2_3, post_draws$gamma2_4, along = 3)
+  }
+
+  iter <- dim(post_draws[[1]])[1]
+  draws <- ncol(post_draws$gamma1)
+  pi_est <- array(data = NA, c(iter, draws, 7))
+  theta_est <- array(data = NA, c(iter, draws, 7))
+  mu_est <- array(data = NA, c(iter, draws, 7))
+
+  if (model == "rifactor") {
+    psi_scaled <- 0
+  } else {
+    psi <- post_draws$psi
+    psi_scaled <- psi[, 1] * gam1
+  }
+
+  for (t in 1:4){
+    theta_est[, , t] <- expit(beta1[, t] + gam1_scaled)
+    pi_est[, , t] <- expit(beta2[, t] + psi_scaled + gam2[, , t])
+    mu_est[, , t] <- theta_est[, , t] * pi_est[, , t] * 90
+  }
+
+  #For treatment group
+  for (t in 1:3){
+    theta_est[, , t + 4] <- expit(beta1[, t + 1] + beta1[, t + 4] + gam1_scaled)
+    pi_est[, , t + 4] <- expit(beta2[,t + 1] + beta2[, t + 4] + psi_scaled + gam2[,, t + 1])
+    mu_est[, , t + 4] <- theta_est[, , t + 4] * pi_est[, , t + 4] * 90
+  }
+  
 }
 
 # posterior predictive draws
@@ -220,3 +275,4 @@ post_predict <- function(theta_draws, pi_draws) {
     }
     return(y_draws)
 }
+
