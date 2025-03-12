@@ -266,6 +266,7 @@ post_in_sample_mean <- function(outcome, model) {
     mu_est[, , t + 4] <- theta_est[, , t + 4] * pi_est[, , t + 4] * 90
   }
   
+  return(list(theta_est = theta_est, pi_est = pi_est, mu_est = mu_est))
 }
 
 # posterior predictive draws
