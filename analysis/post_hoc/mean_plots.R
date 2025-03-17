@@ -11,9 +11,17 @@ here::i_am("analysis/post_hoc/mean_plots.R")
 
 post_summary_df <- readRDS("analysis/data/processed/post_summary_means.rds")
 
+post_summary_df_in_samp <- readRDS("analysis/data/processed/post_summary_means_insample.rds")
+
 
 sbirt <- readRDS("analysis/data/sbirt_clean.rds")
 
+
+# Let's turn this data wrangling into a funciton that will work on both the posterior summary and in-sample data
+# Add code so that the SBIRT group has a baseline observation as well
+# Then the plots should have one row for each outcome and one column for each treatment group
+
+#Posterior checks
 
 mean_baseline <- sbirt |> filter(visit==1) |> pull(heavy) |> mean() 
 
@@ -46,6 +54,18 @@ post_summary_df <- post_summary_df |>
                           visit == "visit4trt" ~ 12)) |>
                           mutate(Month = as.numeric(Month)) |>
                           mutate(Group = ifelse(visit %in% c("visit1", "visit2", "visit3", "visit4"), "Control", "Treatment"))
+
+# Add baseline for post_summary_df Treatment group
+
+baseline <- post_summary_df |> filter(visit == "visit1")
+baseline_trt <- baseline
+baseline_trt$Group <- "Treatment"
+
+post_summary_df <- rbind(post_summary_df, baseline_trt)
+
+#
+
+facet_grid
 
 #Some plotting values
 pd <- position_dodge(.7)
