@@ -26,9 +26,6 @@
 \citation{min2005random}
 \citation{buu2012statistical}
 \citation{wu2023multivariate,liu2015type}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Self-reported days out of the previous 90 in which subjects engaged in heavy drinking at baseline and 3, 6 and 12 month follow-ups. The distribution of responses is both zero-inflated and over-dispersed.\relax }}{3}{figure.caption.1}\protected@file@percent }
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:inflation}{{1}{3}{Self-reported days out of the previous 90 in which subjects engaged in heavy drinking at baseline and 3, 6 and 12 month follow-ups. The distribution of responses is both zero-inflated and over-dispersed.\relax }{figure.caption.1}{}}
 \citation{gelman2013bayesian}
 \citation{albert2014estimating,preisser2016marginalized}
 \citation{rodrigues2003bayesian}
@@ -36,6 +33,9 @@
 \citation{wen2024bayesian}
 \citation{neelon2010bayesian}
 \citation{spiegelhalter1998bayesian,cooper2007predicting}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Self-reported days out of the previous 90 in which subjects engaged in heavy drinking at baseline and 3, 6 and 12 month follow-ups. The distribution of responses is both zero-inflated and over-dispersed.\relax }}{3}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:inflation}{{1}{3}{Self-reported days out of the previous 90 in which subjects engaged in heavy drinking at baseline and 3, 6 and 12 month follow-ups. The distribution of responses is both zero-inflated and over-dispersed.\relax }{figure.caption.1}{}}
 \citation{gardner1995regression}
 \citation{hinde1998overdispersion}
 \citation{hu2018zero,wen2024bayesian}
@@ -44,8 +44,8 @@
 \citation{barr2013random,kwok2007impact}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Model}{5}{section.2}\protected@file@percent }
 \newlabel{s:model}{{2}{5}{Model}{section.2}{}}
-\newlabel{eq:zip1}{{1}{6}{Model}{equation.2.1}{}}
-\newlabel{eq:zip2}{{2}{6}{Model}{equation.2.2}{}}
+\newlabel{eq:zip1}{{1}{5}{Model}{equation.2.1}{}}
+\newlabel{eq:zip2}{{2}{5}{Model}{equation.2.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Random Intercept Model}{6}{subsection.2.1}\protected@file@percent }
 \newlabel{sec: rimodel}{{2.1}{6}{Random Intercept Model}{subsection.2.1}{}}
 \newlabel{eq:linearzerori}{{3}{6}{Random Intercept Model}{equation.2.3}{}}
@@ -57,17 +57,17 @@
 \newlabel{eq:zero_ri_dist}{{6}{7}{Random Intercept Model}{equation.2.6}{}}
 \newlabel{eq:count_ri_dist}{{7}{7}{Random Intercept Model}{equation.2.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Longitudinal Overdispersed Zero-Inflated Binomial Model (LOZIB)}{7}{subsection.2.2}\protected@file@percent }
+\newlabel{eq:linearcountOLRE}{{8}{7}{Longitudinal Overdispersed Zero-Inflated Binomial Model (LOZIB)}{equation.2.8}{}}
 \citation{liechty2004bayesian,weiss2005modeling}
-\newlabel{eq:linearcountOLRE}{{8}{8}{Longitudinal Overdispersed Zero-Inflated Binomial Model (LOZIB)}{equation.2.8}{}}
 \newlabel{eq:count_olre_dist}{{9}{8}{Longitudinal Overdispersed Zero-Inflated Binomial Model (LOZIB)}{equation.2.9}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Covariance Models}{8}{subsection.2.3}\protected@file@percent }
 \newlabel{eq:CovDeconstruct}{{10}{8}{Covariance Models}{equation.2.10}{}}
 \@writefile{toc}{\contentsline {paragraph}{Independence:}{9}{section*.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Compound Symmetry:}{9}{section*.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Autoregressive:}{9}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Antedependent:}{9}{section*.5}\protected@file@percent }
 \citation{lewandowski2009generating}
 \citation{zhang2006sampling}
-\@writefile{toc}{\contentsline {paragraph}{Antedependent:}{10}{section*.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Unstructured:}{10}{section*.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Markove Chain Monte Carlo}{10}{subsection.2.4}\protected@file@percent }
 \citation{gelman2015stan}
@@ -75,8 +75,8 @@
 \citation{rsoftware}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Difference of Differences}{11}{subsection.2.5}\protected@file@percent }
 \newlabel{sec: DoD}{{2.5}{11}{Difference of Differences}{subsection.2.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Prior Distributions}{12}{subsection.2.6}\protected@file@percent }
 \citation{lewandowski2009generating}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Prior Distributions}{13}{subsection.2.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3}SBIRT Data Analysis}{13}{section.3}\protected@file@percent }
 \citation{gelman1992inference}
 \citation{vehtari2017practical}
@@ -85,9 +85,9 @@
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Pareto smoothed approximate leave-one-out cross-validation information criterion (LOO-IC) estimates for LOZIB models fit to the SBIRT data. LOO-IC are given for each of the 12 covariance models for each substance outcome. The models are displayed in ascending order by LOO estimates. All ten observation level random effect LOZIB models fit the SBIRT data considerably better than the random intercept models. Differences between the observation level random effect models were small.\relax }}{15}{table.caption.7}\protected@file@percent }
 \newlabel{tab:loo}{{1}{15}{Pareto smoothed approximate leave-one-out cross-validation information criterion (LOO-IC) estimates for LOZIB models fit to the SBIRT data. LOO-IC are given for each of the 12 covariance models for each substance outcome. The models are displayed in ascending order by LOO estimates. All ten observation level random effect LOZIB models fit the SBIRT data considerably better than the random intercept models. Differences between the observation level random effect models were small.\relax }{table.caption.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Model Fit}{15}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Difference of Differences}{15}{section*.8}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Top:} Difference of differences (DoD) in mean days of heavy drinking measured as difference in change from baseline at each of the three follow up visits. Negative values indicate SBIRT group exhibited greater reductions in heavy drinking than control group. \textbf  {Bottom left:} DoD in mean days of heavy drinking coming only from the count model, i.e., only among subjects who were deemed to be heavy drinkers. \textbf  {Bottom right:} DoD in probability of being a heavy drinker coming from the zero model. Estimates and 95\% Bayesian credible intervals (CrI) are given for all seven ZIB models. The random intercept model (RI), given in blue, and the autoregressive constant variance model (ARcv), given in orange, are bolded for emphasis.\relax }}{16}{figure.caption.9}\protected@file@percent }
 \newlabel{fig:DoDplots}{{2}{16}{\textbf {Top:} Difference of differences (DoD) in mean days of heavy drinking measured as difference in change from baseline at each of the three follow up visits. Negative values indicate SBIRT group exhibited greater reductions in heavy drinking than control group. \textbf {Bottom left:} DoD in mean days of heavy drinking coming only from the count model, i.e., only among subjects who were deemed to be heavy drinkers. \textbf {Bottom right:} DoD in probability of being a heavy drinker coming from the zero model. Estimates and 95\% Bayesian credible intervals (CrI) are given for all seven ZIB models. The random intercept model (RI), given in blue, and the autoregressive constant variance model (ARcv), given in orange, are bolded for emphasis.\relax }{figure.caption.9}{}}
-\@writefile{toc}{\contentsline {paragraph}{Difference of Differences}{16}{section*.8}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Mean estimates:}{17}{section*.10}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Posterior means and 95\% Bayesian CrIs from RI and ARcv models. The top portion of the table gives mean days of heavy drinking out of the previous 90 days. The middle portion of the table gives DoD means and 95\% Bayesian CrIs, as well as the posterior probabilities that the DoD was less than zero - indicating a benefit of SBIRT over the control treatment. The bottom portion of the table gives posterior means and CrIs for the zero and count model random effects standard deviations ($\sigma _{1}$ and $\sigma _{2}$), the $\psi $ parameter, which models association between the count and zero models, and $\rho $, which is the within-individual across-time count model random effects correlation in the ARcv model. \relax }}{18}{table.caption.11}\protected@file@percent }
 \newlabel{tab:dodmean1}{{2}{18}{Posterior means and 95\% Bayesian CrIs from RI and ARcv models. The top portion of the table gives mean days of heavy drinking out of the previous 90 days. The middle portion of the table gives DoD means and 95\% Bayesian CrIs, as well as the posterior probabilities that the DoD was less than zero - indicating a benefit of SBIRT over the control treatment. The bottom portion of the table gives posterior means and CrIs for the zero and count model random effects standard deviations ($\sigma _{1}$ and $\sigma _{2}$), the $\psi $ parameter, which models association between the count and zero models, and $\rho $, which is the within-individual across-time count model random effects correlation in the ARcv model. \relax }{table.caption.11}{}}

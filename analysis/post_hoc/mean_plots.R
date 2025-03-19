@@ -3,6 +3,7 @@
 # To simulate from posterior predictive distribution
 library(dplyr)
 library(ggplot2)
+library(extrafont)
 
 ### Directory organization
 
@@ -23,22 +24,21 @@ sbirt <- readRDS("analysis/data/sbirt_clean.rds")
 
 #Posterior checks
 
-mean_baseline <- sbirt |> filter(visit==1) |> pull(heavy) |> mean() 
+mean_baseline <- sbirt |> filter(visit == 1) |> pull(heavy) |> mean() 
 
-mean_followup <- sbirt |> filter(visit>1) |> group_by(group, visit) |> summarize(mean = mean(heavy, na.rm=TRUE)) 
+mean_followup <- sbirt |> filter(visit > 1) |> group_by(group, visit) |> summarize(mean = mean(heavy, na.rm=TRUE)) |> rename(Group = group)
 
-mean_baseline
-mean_followup
 
-base_df <- data.frame(group = 0, visit = 1, mean = mean_baseline)
+
+base_df <- data.frame(Group = c(0, 1), visit = c(1, 1), mean = c(mean_baseline, mean_baseline))
 
 raw_df <- rbind(base_df, mean_followup) |>
-    mutate(group = ifelse(group == 0, "Control", "Treatment")) |>
-    mutate(Month = case_when(visit == 1 ~ 0,
-                             visit == 2 ~ 3,
-                             visit == 3 ~ 6,
-                             visit == 4 ~ 12)) |>
-    mutate(Month = as.numeric(Month))
+  mutate(Group = ifelse(Group == 0, "Control", "Treatment")) |>
+  mutate(Month = case_when(visit == 1 ~ 0,
+                           visit == 2 ~ 3,
+                           visit == 3 ~ 6,
+                           visit == 4 ~ 12)) |>
+  mutate(Month = as.numeric(Month))
 
 # First plot, let's plot the means with upper and lower error bars for heavy
 # Let's do it with three sets of lines and error bars
@@ -63,15 +63,19 @@ baseline_trt$Group <- "Treatment"
 
 post_summary_df <- rbind(post_summary_df, baseline_trt)
 
-#
 
-facet_grid
 
 #Some plotting values
 pd <- position_dodge(.7)
 
-models_of_interest <- c("un", "ri")
-heavy_means <- post_summary_df |> filter(outcome == "heavy", est == "avg", model %in% models_of_interest)
+models_of_interest <- c("un", "indcv", "ri")
+heavy_means <- post_summary_df |>
+  filter(outcome == "heavy", est == "avg", model %in% models_of_interest) |>
+  rename(Model = model) |>
+  mutate(Model = case_when(Model == "un" ~ "UN",
+                           Model == "indcv" ~ "INDcv",
+                           Model == "ri" ~ "RI"))
+
 other_heavy_means <- post_summary_df |> filter(outcome == "heavy", est == "avg", !model %in% models_of_interest)
 
 
@@ -80,42 +84,33 @@ other_heavy_means <- post_summary_df |> filter(outcome == "heavy", est == "avg",
 # Facet by group
 
 mean_plot <- ggplot(data = heavy_means, aes(x = Month, y = avg)) +
-  geom_line(aes(color = model, group=interaction(model, Group), linetype=Group), position = pd, linewidth = 1.5) +
-  geom_errorbar(aes(ymin = lower, ymax = upper, color = model, group=interaction(model, Group), linetype=Group) , position = pd, linewidth = 1.5, width = .5) +
-  geom_point(aes(color = model, group=interaction(model, Group)), size = 5, shape = 21, fill = "white", position = pd) +
-  scale_color_manual(values = c("blue", "orange")) +
-  scale_fill_manual(values = c("blue", "orange")) +
-  geom_line(data = raw_df, aes(x = Month, y = mean, linetype = group), linewidth = 1.5) +
-  geom_point(data = raw_df, aes(x = Month, y = mean, shape = group), size = 5) +
-  theme_bw()
+  geom_line(aes(color = Model, group = Model), position = pd, linewidth = .5) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, color = Model, group = Model) , position = pd, linewidth = .5, width = .5) +
+  geom_point(aes(color = Model, group = Model), size = 1, shape = 21, fill = "white", position = pd) +
+  scale_color_manual(values = c("blue", "orange", "green")) +
+  scale_fill_manual(values = c("blue", "orange", "green")) +
+  geom_line(data = raw_df, aes(x = Month, y = mean), linewidth = .5, color = "grey", linetype = "dashed") +
+  geom_point(data = raw_df, aes(x = Month, y = mean), color = "grey", size = .5) +
+  theme_bw() +
+  labs(x = "Month", y = "Average Heavy Drinking Days") +
+  facet_wrap(~Group) +
+  theme(text = element_text(family = "sans", size = 12),
+  legend.title = element_blank(),
+  legend.position = "inside",  # New way to specify that the legend is inside
+  legend.position.inside =  c(0.85, 0.75),
+  legend.background = element_rect(fill = alpha("white", 0.6)))
 
-mean_plot
+ggsave("manuscript/figures/mean_plot.pdf", plot = mean_plot, width = 6, height = 3 )
 
-  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
-  geom_line(data = other_heavy_means, aes(x = visit, y = avg), color = "gray") +
-  geom_point(data = other_heavy_means, aes(x = visit, y = avg),  color = "gray") +
-  geom_errorbar(data = other_heavy_means, aes(x = visit, ymin = lower, ymax = upper), width = 0.2, color = "gray") +
-  labs(x = "Visit", y = "Average", title = "Model Comparisons with Error Bars") +
-  theme_bw()
 
-mean_plot <- post_summary_df |> filter(outcome == "heavy", est == "avg") |>
-  ggplot(aes(x = model, y = avg, group = model,
-             color = ifelse(model == "UN", "UN", "Other"),
-             alpha = ifelse(model == "UN", "UN", "Other"))) +
-  geom_line(size = 1) +
-  geom_point(size = 2) +
-  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
-  scale_color_manual(values = c("UN" = "orange", "Other" = "grey")) +
-  scale_alpha_manual(values = c("UN" = 1, "Other" = 0.7)) +
-  theme_minimal() +
-  labs(x = "Visit", y = "Average", title = "Model Comparisons with Error Bars") +
-  theme(legend.title = element_blank())
 
-mean_visit_df |> filter(outcome == "heavy", est == "avg") |> ggplot(aes(x = outcome, y = avg, fill = model)) +
-    geom_bar(stat = "identity", position = "dodge") +
-    geom_errorbar(aes(ymin = lower, ymax = upper), position = pd, width = 0.25) +
-    labs(title = "Posterior Mean Estimates for Each Outcome and Covariate Model",
-         x = "Outcome", y = "Mean Estimate") +
-    theme_minimal() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_fill_brewer(palette = "Set1")
+#### Now let's make a Difference of Differences plot
+
+# 1) I want posterior distributions of difference of differences for each time point
+
+'
+Steps:
+1) Get 500 samples of the difference of differences for each time point
+'
+
+source("post_functions.r")
