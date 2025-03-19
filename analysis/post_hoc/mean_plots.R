@@ -102,6 +102,8 @@ mean_plot <- ggplot(data = heavy_means, aes(x = Month, y = avg)) +
 
 ggsave("manuscript/figures/mean_plot.pdf", plot = mean_plot, width = 6, height = 3 )
 
+## Do same as above, but for difference of differences
+
 
 
 #### Now let's make a Difference of Differences plot
@@ -113,4 +115,64 @@ Steps:
 1) Get 500 samples of the difference of differences for each time point
 '
 
+setwd("analysis/post_hoc/")
 source("post_functions.r")
+
+
+post <- post_means("heavy", "indcv")
+
+DoD_indcv <- array(data = NA, c(dim(post$mu_est)[1], 3))
+DoD_indcv[, 1] <- apply(post$mu_est[, , 5] - post$mu_est[, , 2], 1, mean)
+DoD_indcv[, 2] <- apply(post$mu_est[, , 6] - post$mu_est[, , 3], 1, mean)
+DoD_indcv[, 3] <- apply(post$mu_est[, , 7] - post$mu_est[, , 4], 1, mean)
+
+rm(post)
+
+post <- post_means("heavy", "ri")
+
+DoD_ri <- array(data = NA, c(dim(post$mu_est)[1], 3))
+DoD_ri[, 1] <- apply(post$mu_est[, , 5] - post$mu_est[, , 2], 1, mean)
+DoD_ri[, 2] <- apply(post$mu_est[, , 6] - post$mu_est[, , 3], 1, mean)
+DoD_ri[, 3] <- apply(post$mu_est[, , 7] - post$mu_est[, , 4], 1, mean)
+
+rm(post)
+
+setwd("../../")
+
+bayes_p_ri <- rep(NA, 3)
+bayes_p_indcv <- rep(NA, 3)
+for (i in 1:3) {
+  bayes_p_ri[i] <- sum(DoD_ri[, i] > 0) / length(DoD_ri[, i])
+  bayes_p_indcv[i] <- sum(DoD_indcv[, i] > 0) / length(DoD_indcv[, i])
+}
+
+DoD <- data.frame(DoD = c(DoD_ri[, 1]), Model = rep("RI", length(DoD_ri[, 1])), Visit = rep("3 Month", length(DoD_ri[, 1])))
+
+DoD <- rbind(DoD, data.frame(DoD = c(DoD_indcv[, 1]), Model = rep("INDcv", length(DoD_indcv[, 1])), Visit = rep("3 Month", length(DoD_indcv[, 1]))))
+DoD <- rbind(DoD, data.frame(DoD = c(DoD_ri[, 2]), Model = rep("RI", length(DoD_ri[, 2])), Visit = rep("6 Month", length(DoD_ri[, 2]))))
+DoD <- rbind(DoD, data.frame(DoD = c(DoD_indcv[, 2]), Model = rep("INDcv", length(DoD_indcv[, 2])), Visit = rep("6 Month", length(DoD_indcv[, 2]))))
+DoD <- rbind(DoD, data.frame(DoD = c(DoD_ri[, 3]), Model = rep("RI", length(DoD_ri[, 3])), Visit = rep("12 Month", length(DoD_ri[, 3]))))
+DoD <- rbind(DoD, data.frame(DoD = c(DoD_indcv[, 3]), Model = rep("INDcv", length(DoD_indcv[, 3])), Visit = rep("12 Month", length(DoD_indcv[, 3]))))
+
+
+DoD <- DoD |> mutate(Visit = factor(Visit, levels = c("3 Month", "6 Month", "12 Month")))
+
+DoD_plot <- ggplot(data = DoD) +
+  geom_density(aes(x = DoD, fill = Model), alpha = .5, linewidth = .4) +
+  geom_vline(xintercept = 0, color = "gray", linetype = "dashed") +
+  scale_fill_manual(values = c("blue", "orange")) +
+  labs(x = "DoD Days of Heavy Drinking", y = "Density") +
+  theme_bw() +
+  facet_grid(Visit ~ .) +
+  theme(legend.text = element_text(size = 8),
+        legend.key.size = unit(0.25, "cm"),
+        legend.title = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(size = 8),
+        legend.position = "inside",
+        legend.position.inside =  c(0.85, 0.85),
+        legend.background = element_rect(fill = alpha("white", 0.6)))
+
+
+ggsave("manuscript/figures/DoD_heavy_plot.pdf", plot = DoD_plot, width = 6, height = 3 )
+
