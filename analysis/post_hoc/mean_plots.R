@@ -5,6 +5,8 @@ library(dplyr)
 library(ggplot2)
 library(extrafont)
 
+palette.colors(palette = "Okabe-Ito")
+
 ### Directory organization
 
 here::i_am("analysis/post_hoc/mean_plots.R")
