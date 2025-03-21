@@ -5,8 +5,6 @@ library(dplyr)
 library(ggplot2)
 library(extrafont)
 
-palette.colors(palette = "Okabe-Ito")
-
 ### Directory organization
 
 here::i_am("analysis/post_hoc/mean_plots.R")
@@ -70,13 +68,17 @@ post_summary_df <- rbind(post_summary_df, baseline_trt)
 #Some plotting values
 pd <- position_dodge(.7)
 
-models_of_interest <- c("un", "indcv", "ri")
-heavy_means <- post_summary_df |>
-  filter(outcome == "heavy", est == "avg", model %in% models_of_interest) |>
+models_of_interest <- c("un", "indcv", "ri", "ad")
+outcome_of_interest <- "heavy"
+
+best_models <- post_summary_df |>
+  filter(outcome == outcome_of_interest, model %in% models_of_interest) |>
   rename(Model = model) |>
   mutate(Model = case_when(Model == "un" ~ "UN",
                            Model == "indcv" ~ "INDcv",
-                           Model == "ri" ~ "RI"))
+                           Model == "ri" ~ "RI",
+                           Model == "ad" ~ "AD")) |>
+  mutate(Model = factor(Model, levels = c("UN", "AD", "INDcv", "RI")))
 
 other_heavy_means <- post_summary_df |> filter(outcome == "heavy", est == "avg", !model %in% models_of_interest)
 
@@ -85,24 +87,42 @@ other_heavy_means <- post_summary_df |> filter(outcome == "heavy", est == "avg",
 # Fix legend
 # Facet by group
 
-mean_plot <- ggplot(data = heavy_means, aes(x = Month, y = avg)) +
+mean_plot <- filter(best_models, est == "avg") |>
+  ggplot(aes(x = Month, y = avg)) +
   geom_line(aes(color = Model, group = Model), position = pd, linewidth = .5) +
   geom_errorbar(aes(ymin = lower, ymax = upper, color = Model, group = Model) , position = pd, linewidth = .5, width = .5) +
-  geom_point(aes(color = Model, group = Model), size = 1, shape = 21, fill = "white", position = pd) +
-  scale_color_manual(values = c("blue", "orange", "green")) +
-  scale_fill_manual(values = c("blue", "orange", "green")) +
-  geom_line(data = raw_df, aes(x = Month, y = mean), linewidth = .5, color = "grey", linetype = "dashed") +
-  geom_point(data = raw_df, aes(x = Month, y = mean), color = "grey", size = .5) +
-  theme_bw() +
-  labs(x = "Month", y = "Average Heavy Drinking Days") +
+  scale_color_brewer(type = "qual", aesthetics = c("colour", "fill"), palette = 2) +
+  geom_line(data = raw_df, aes(x = Month, y = mean), linewidth = .5, color = "black", linetype = "dashed") +
+  geom_point(data = raw_df, aes(x = Month, y = mean), color = "black", shape = 15) +
+  geom_point(aes(color = Model, group = Model), size = 1, shape = 21, fill = "white", position = pd, alpha = .5) +
+  labs(x = "Month", y = "Heavy Drinking Days") +
+  theme_bw(base_size = 15) +
   facet_wrap(~Group) +
-  theme(text = element_text(family = "sans", size = 12),
-  legend.title = element_blank(),
+  theme(legend.title = element_blank(),
   legend.position = "inside",  # New way to specify that the legend is inside
-  legend.position.inside =  c(0.85, 0.75),
+  legend.position.inside =  c(0.85, 0.7),
   legend.background = element_rect(fill = alpha("white", 0.6)))
 
 ggsave("manuscript/figures/mean_plot.pdf", plot = mean_plot, width = 6, height = 3 )
+
+
+# Now let's do the same for the zero and count models data
+
+zero_plot <- filter(best_models, est == "theta") |>
+  ggplot(aes(x = Month, y = avg)) +
+  geom_line(aes(color = Model, group = Model), position = pd, linewidth = .5) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, color = Model, group = Model) , position = pd, linewidth = .5, width = .5) +
+  scale_color_brewer(type = "qual", aesthetics = c("colour", "fill"), palette = 2) +
+  geom_point(aes(color = Model, group = Model), size = 1, shape = 21, fill = "white", position = pd, alpha = .5) +
+  labs(x = "Month", y = "Probability of Drinking") +
+  theme_bw(base_size = 15) +
+  facet_wrap(~Group) +
+  theme(legend.title = element_blank(),
+  legend.position = "inside",  # New way to specify that the legend is inside
+  legend.position.inside =  c(0.85, 0.7),
+  legend.background = element_rect(fill = alpha("white", 0.6)))
+
+ggsave("manuscript/figures/zero_plot.pdf", plot = zero_plot, width = 6, height = 3 )
 
 ## Do same as above, but for difference of differences
 
