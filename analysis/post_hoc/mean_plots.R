@@ -124,7 +124,25 @@ zero_plot <- filter(best_models, est == "theta") |>
 
 ggsave("manuscript/figures/zero_plot.pdf", plot = zero_plot, width = 6, height = 3 )
 
-## Do same as above, but for difference of differences
+## Count model
+
+count_plot <- filter(best_models, est == "pi") |>
+  mutate(avg = avg * 90, upper = upper * 90, lower = lower * 90) |>
+  ggplot(aes(x = Month, y = avg)) +
+  geom_line(aes(color = Model, group = Model), position = pd, linewidth = .5) +
+  geom_errorbar(aes(ymin = lower, ymax = upper, color = Model, group = Model) , position = pd, linewidth = .5, width = .5) +
+  scale_color_brewer(type = "qual", aesthetics = c("colour", "fill"), palette = 2) +
+  geom_point(aes(color = Model, group = Model), size = 1, shape = 21, fill = "white", position = pd, alpha = .5) +
+  labs(x = "Month", y = "Heavy Drinking Days") +
+  theme_bw(base_size = 15) +
+  facet_wrap(~Group) +
+  theme(legend.title = element_blank(),
+  legend.position = "inside",  # New way to specify that the legend is inside
+  legend.position.inside =  c(0.85, 0.7),
+  legend.background = element_rect(fill = alpha("white", 0.6)))
+
+ggsave("manuscript/figures/count_plot.pdf", plot = count_plot, width = 6, height = 3 )
+
 
 
 
