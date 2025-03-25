@@ -168,14 +168,6 @@ mean_all_plot
 ggsave("manuscript/figures/mean_all_plot.pdf", plot = mean_all_plot, width = 6, height = 9 )
 
 
-#### Now let's make a Difference of Differences plot
-
-# 1) I want posterior distributions of difference of differences for each time point
-
-'
-Steps:
-1) Get 500 samples of the difference of differences for each time point
-'
 
 setwd("analysis/post_hoc/")
 source("post_functions.r")

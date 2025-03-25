@@ -189,10 +189,6 @@ post_means <- function(outcome, model, gam_draws = 500) {
   return(list(theta_est = theta_est, pi_est = pi_est, mu_est = mu_est))
 }
 
-
-
-
-
 ## Take an array of posterior samples (integrating over random effects) and return the mean and 95% credible interval for the mean
 post_summary_means <- function(est_array) {
   means <- apply(est_array, c(1, 3), mean)
@@ -269,8 +265,8 @@ post_in_sample_mean <- function(outcome, model) {
   return(list(theta_est = theta_est, pi_est = pi_est, mu_est = mu_est))
 }
 
-# posterior predictive draws
 
+# posterior predictive draws
 post_predict <- function(theta_draws, pi_draws) {
     iter <- dim(theta_draws)[1]
     y_draws <- array(data = NA, c(iter, 7))
