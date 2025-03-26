@@ -57,3 +57,19 @@ apply(post_summary_df, 2, function(x) {
 
 # Now for the UN model
 
+rm(post_draws)
+
+post_draws <- extract_draws("heavy", "un")
+
+L_Omega <- post_draws$L_omega
+
+Omegas <- array(NA, c(dim(L_Omega)[1], 4, 4))
+
+for (i in seq_len(dim(L_Omega)[1])) {
+  L_Omega_i <- matrix(as.numeric(L_Omega[i, ]), nrow = 4, byrow = FALSE)
+  Omegas[i,,] <- L_Omega_i %*% t(L_Omega_i)
+}
+
+Omega_post_summary <- apply(Omegas, c(2,3), function(x) {
+  c(mean(x), quantile(x, c(0.025, 0.975)))
+})

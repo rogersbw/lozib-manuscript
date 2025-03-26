@@ -148,20 +148,20 @@ for (i in 2:chains){
   ri_post_df <- rbind(ri_post_df, data.frame(ri_post[,i,]))
 }
 
-beta1 <- ri_post_df[,1:7]
-beta2 <- ri_post_df[,8:14]
-sigma1 <- ri_post_df[,15]
-sigma2 <- ri_post_df[,16]
-psi <- ri_post_df[,17]
-gamma1 <- ri_post_df[,18:735 ]
-gamma2 <- ri_post_df[,736:1453]
+beta1 <- ri_post_df[, 1:7]
+beta2 <- ri_post_df[, 8:14]
+sigma1 <- ri_post_df[, 15]
+sigma2 <- ri_post_df[, 16]
+psi <- ri_post_df[, 17]
+gamma1 <- ri_post_df[, 18:735]
+gamma2 <- ri_post_df[, 736:1453]
 
 
 
 # Select index of posterior samples
 draw_iter <- seq(1, dim(ri_post_df)[1], by = 500)
 
-y_draws_baseline_ri_df = data.frame(sample = factor(), y = integer())
+y_draws_baseline_ri_df <- data.frame(sample = factor(), y = integer())
 iter <- 1
 
 for(i in draw_iter){

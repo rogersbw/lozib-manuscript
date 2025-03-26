@@ -107,7 +107,7 @@ transform_un <- function(gam2, sigma2, L_Omega) {
 
   for (i in seq_len(dim(sigma2)[1])) {
     one_L <- matrix(as.numeric(L_Omega[i, ]), nrow = dim(gam2)[2], byrow = FALSE)
-    gam2_scaled[i, , ] <- t(diag(sigma2[i, ]) %*% one_L %*% t(gam2))
+    gam2_scaled[i, , ] <- diag(sigma2[i, ]) %*% one_L %*% t(gam2)
   }
   return(gam2_scaled)
 }
