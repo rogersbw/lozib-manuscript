@@ -60,3 +60,6 @@ analysis/fit_results/loo/*.rds
 analysis/fit_results/parameter_draws/*.rds
 
 analysis/slurm_output/
+
+
+analysis/data/processed/*.rds
