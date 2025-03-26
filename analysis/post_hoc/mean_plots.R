@@ -4,6 +4,7 @@
 library(dplyr)
 library(ggplot2)
 library(extrafont)
+library(ggpubr)
 
 ### Directory organization
 
@@ -33,7 +34,7 @@ mean_followup <- sbirt |> filter(visit > 1) |> group_by(group, visit) |> summari
 base_df <- data.frame(Group = c(0, 1), visit = c(1, 1), mean = c(mean_baseline, mean_baseline))
 
 raw_df <- rbind(base_df, mean_followup) |>
-  mutate(Group = ifelse(Group == 0, "Control", "Treatment")) |>
+  mutate(Group = ifelse(Group == 0, "Control", "SBIRT")) |>
   mutate(Month = case_when(visit == 1 ~ 0,
                            visit == 2 ~ 3,
                            visit == 3 ~ 6,
@@ -53,13 +54,13 @@ post_summary_df <- post_summary_df |>
                           visit == "visit3trt" ~ 6,
                           visit == "visit4trt" ~ 12)) |>
                           mutate(Month = as.numeric(Month)) |>
-                          mutate(Group = ifelse(visit %in% c("visit1", "visit2", "visit3", "visit4"), "Control", "Treatment"))
+                          mutate(Group = ifelse(visit %in% c("visit1", "visit2", "visit3", "visit4"), "Control", "SBIRT"))
 
 # Add baseline for post_summary_df Treatment group
 
 baseline <- post_summary_df |> filter(visit == "visit1")
 baseline_trt <- baseline
-baseline_trt$Group <- "Treatment"
+baseline_trt$Group <- "SBIRT"
 
 post_summary_df <- rbind(post_summary_df, baseline_trt)
 
@@ -96,9 +97,11 @@ mean_plot <- filter(best_models, est == "avg") |>
   geom_point(data = raw_df, aes(x = Month, y = mean), color = "black", shape = 15) +
   geom_point(aes(color = Model, group = Model), size = 1, shape = 21, fill = "white", position = pd, alpha = .5) +
   labs(x = "Month", y = "Heavy Drinking Days") +
-  theme_bw(base_size = 15) +
+  ggtitle("Zero-Inflated Models") +
+  theme_bw(base_size = 12) +
   facet_wrap(~Group) +
   theme(legend.title = element_blank(),
+  plot.title = element_text(hjust = 0.5),
   legend.position = "inside",  # New way to specify that the legend is inside
   legend.position.inside =  c(0.85, 0.7),
   legend.background = element_rect(fill = alpha("white", 0.6)))
@@ -114,12 +117,14 @@ zero_plot <- filter(best_models, est == "theta") |>
   geom_errorbar(aes(ymin = lower, ymax = upper, color = Model, group = Model) , position = pd, linewidth = .5, width = .5) +
   scale_color_brewer(type = "qual", aesthetics = c("colour", "fill"), palette = 2) +
   geom_point(aes(color = Model, group = Model), size = 1, shape = 21, fill = "white", position = pd, alpha = .5) +
-  labs(x = "Month", y = "Probability of Drinking") +
-  theme_bw(base_size = 15) +
+  labs(x = "Month", y = "Proportion Heavy Drinkers") +
+  theme_bw(base_size = 12) +
+  ggtitle("Zero Models") +
   facet_wrap(~Group) +
   theme(legend.title = element_blank(),
+  plot.title = element_text(hjust = 0.5),
   legend.position = "inside",  # New way to specify that the legend is inside
-  legend.position.inside =  c(0.85, 0.7),
+  legend.position.inside =  c(0.87, 0.72),
   legend.background = element_rect(fill = alpha("white", 0.6)))
 
 ggsave("manuscript/figures/zero_plot.pdf", plot = zero_plot, width = 6, height = 3 )
@@ -134,26 +139,35 @@ count_plot <- filter(best_models, est == "pi") |>
   scale_color_brewer(type = "qual", aesthetics = c("colour", "fill"), palette = 2) +
   geom_point(aes(color = Model, group = Model), size = 1, shape = 21, fill = "white", position = pd, alpha = .5) +
   labs(x = "Month", y = "Heavy Drinking Days") +
-  theme_bw(base_size = 15) +
+  ggtitle("Count Models") +
+  theme_bw(base_size = 12) +
   facet_wrap(~Group) +
   theme(legend.title = element_blank(),
+  plot.title = element_text(hjust = 0.5),
   legend.position = "inside",  # New way to specify that the legend is inside
   legend.position.inside =  c(0.85, 0.7),
   legend.background = element_rect(fill = alpha("white", 0.6)))
 
 ggsave("manuscript/figures/count_plot.pdf", plot = count_plot, width = 6, height = 3 )
 
+strp_plot <- function(plot) {
+  stripped_plot <- plot + theme(legend.title = element_blank(),
+  legend.position = "none",
+  axis.title.x = element_blank(),
+  axis.text.x = element_blank()
+  )
+
+  return(stripped_plot)
+}
+
+mean_all_plot <- ggarrange(
+    strp_plot(mean_plot), strp_plot(count_plot), zero_plot, nrow = 3
+  )
+mean_all_plot
+
+ggsave("manuscript/figures/mean_all_plot.pdf", plot = mean_all_plot, width = 6, height = 9 )
 
 
-
-#### Now let's make a Difference of Differences plot
-
-# 1) I want posterior distributions of difference of differences for each time point
-
-'
-Steps:
-1) Get 500 samples of the difference of differences for each time point
-'
 
 setwd("analysis/post_hoc/")
 source("post_functions.r")

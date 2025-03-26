@@ -60,7 +60,7 @@
 
 It is common for count data to have excess zeros relative to standard distributions, known as zero-inflation. This often happens in settings where zeros have a special meaning and can be created by a process separate from that which produces the counts. For example, we consider the number of days of heavy drinking in a population of high risk individuals. We observe a large number of zeros because not all subjects engage in heavy drinking. Thus, zero counts can come from two different processes -- a person may engage in no heavy drinking because this is not an activity they engage in, or a person may occasionally drink heavily, but happen to not do so during the observed time interval. We call these structural and random zeros, respectively.
 
-Our interest is in estimating the effect of a Screening, Brief Intervention and Referral to Treatment (SBIRT) intervention to reduce alcohol and drug use in a population of substance users seeking mental health treatment \citep{karno2021effect}. SBIRT has received attention recently as a treatment approach for substance use disorder (SUD) \citep{saitz2014screening, glass2015specialty, barata2017effectiveness, tetrault2020computerized}. We analyze data consisting of 718 patients aged 18 and older randomized into either SBIRT or standard of care treatment groups. To be eligible for the study, subjects had to have a mental health disorder and report use of cannabis, stimulants or one or more days of heavy drinking ($\geq 5$ drinks for men, $\geq 4$ drinks for women). Subjects were brought in for a baseline visit, and followed up with at 3, 6, and 12 months -- at each visit, a number of variables were recorded including the number of days out of the previous 90 that each subject engaged in heavy alcohol use. As subject were eligible for the study for using any of a variety of substances, a large number of zero counts were observed in days of heavy drinking (Figure \ref{fig:inflation}).
+Our interest is in estimating the effect of a Screening, Brief Intervention and Referral to Treatment (SBIRT) intervention to reduce alcohol and drug use in a population of substance users seeking mental health treatment \citep{karno2021effect}. SBIRT has received attention recently as a treatment approach for substance use disorder (SUD) \citep{saitz2014screening, glass2015specialty, barata2017effectiveness, tetrault2020computerized}. We analyze data consisting of 718 patients aged 18 and older randomized into either SBIRT or standard of care treatment groups. To be eligible for the study, subjects had to have a mental health disorder and report use of cannabis, stimulants or one or more days of heavy drinking ($\geq 5$ drinks for men, $\geq 4$ drinks for women). Subjects were brought in for a baseline visit, and followed up with at 3, 6, and 12 months -- at each visit, a number of variables were recorded including the number of days out of the previous 90 that each subject engaged in heavy alcohol use. As subjects were eligible for the study for using any of a variety of substances, a large number of zero counts were observed in days of heavy drinking (Figure \ref{fig:inflation}).
 
 \begin{figure}[ht]
 	\centering
@@ -283,6 +283,46 @@ We compare model fit between the 12 different models using Bayesian approximate 
 	\label{tab:loo}
 \end{table}
 
+
+\subsection{Mean estimates:}
+
+The top plot in Figure \ref{fig:meanplots} gives the overall means of days of heavy drinking out of the previous 90 coming from the entire zero-inflated models. In general, the ARcv model estimates lower levels of heavy drinking than the RI model, with smaller credible intervals. As in the DoD estimates, the differences between the LOZIB models and the RI model are mainly in the count model. While the LOZIB models do not find much difference between treatment groups, people in both treatment groups reduced rates of heavy drinking -- particularly through a decrease in the zero model estimate, that is, a decrease in probability of an observation coming from the count model.
+
+A comparison between the ARcv and RI models is given in Table \ref{tab:dodmean}. Again, the ARcv model estimates lower mean days of heavy drinking than the RI model, as well as smaller (less negative) DoD estimates. Given the better fit of the ARcv model, it is likely the RI is overstating the amount of heavy drinking as well as the effectiveness of intervention. \bwr{REW: Compare to raw data, relating to last 2 sentences} Table \ref{tab:dodmean} also provides the estimated posterior probability that the difference of differences is less than zero (p(DoD$<0$)), which would indicate superiority of SBIRT over the standard of care. There are large differences between the the ARcv and RI models in this estimated probability of intervention effectiveness at the 6 and 12 month visits, with the RI model again overstating the treatment effect compared to the ARcv model. 
+
+The bottom portion of Table \ref{tab:dodmean} gives posterior estimates and CrIs for variance and correlation parameters. The ARcv model has wider posterior distributions for the zero and count model standard deviation estimates, as well as for the $\psi$ parameter, which models the within-individual association between the zero and count model estimates. In addition, the within-individual random effects correlation is estimated to be rather high [ .732, \textit{95\%CrI} = (.647, .797)].
+
+\subsection{Covariance Inference}
+
+
+
+
+\begin{table}[ht]
+		\centering
+		\begin{tabular}{lccc}
+			\hline
+			& 3 Month & 6 Month & 12 Month \\ 
+			\hline
+			\textit{AD Model} & & & \\
+			\multirow{2}{*}{\qquad Baseline} & .11 &  &  \\ 
+			&  (.00, .57) &  &  \\ 
+			\multirow{2}{*}{\qquad 3 Month} &  & .57 & \\ 
+			&   &  (.33, .78) &   \\ 
+			\multirow{2}{*}{\qquad 6 Month} &  &  & .62 \\ 
+			&   &   & (.36, .82) \\
+			 \\[2mm]
+			\textit{UN Model} & & & \\
+			\multirow{2}{*}{\qquad Baseline} & .11 &  &  \\ 
+			&  (.00, .57) &  &  \\ 
+			\multirow{2}{*}{\qquad 3 Month} &  & .57 & \\ 
+			&   &  (.33, .78) &   \\ 
+			\multirow{2}{*}{\qquad 6 Month} &  &  & .62 \\ 
+			&   &   & (.36, .82) \\  
+			\hline
+		\end{tabular}
+		\label{ch4:tab:cov}
+	\end{table}
+
 %\begin{table}[ht]
 %	\caption{UN model mean estimates and 95\% Bayesian CrI from zero and count models for each treatment group at each time point for SBIRT data.  Zero model estimates are proportion of subjects that engage in heavy alcohol use, count model estimates are the expected number of days per 90 of heavy alcohol use among users. Middle portion gives mean DoD estimates for each part of the hurdle model at each time point as well as the average across all follow-up time points (All F-U).  $\psi$ is the parameter modeling the dependency between zero and count models.}
 %	\centering
@@ -307,6 +347,13 @@ We compare model fit between the 12 different models using Bayesian approximate 
 		%			\hline
 		%	\end{tabular}}
 %\end{table}
+\begin{figure}
+	\centering
+	\includegraphics[scale = .8]{figures/mean_all_plot.pdf}
+	\caption{Posterior means and 95\% CrIs for the three best fitting LOZIB models (UN, AD and INDcv) as well as the RI model for comparison. Plots on the left show the posterior means and CrIs for the control group and plots on the right show the same for the SBIRT group.  The top row of plots show the posterior summaries for the full zero-inflated models, while the middle and bottom rows display the posterior summaries of the count and zero models. The observed sample means for each group and time point are shown in black with a dashed line in top plots.}
+	\label{fig:meanplots}
+\end{figure}
+
 
 \paragraph{Difference of Differences}
 Figure \ref{fig:DoDplots} gives difference of differences (DoD) for all seven ZIB models, as well as the DoDs estimated from both the zero and the count parts of the model. The ARcv LOZIB and the RI models are bolded in orange and blue respectively.
@@ -327,32 +374,24 @@ The lower left plot in Figure \ref{fig:DoDplots} gives the count model estimates
 
 The differences in treatment effects are minimal in the zero models (Figure \ref{fig:DoDplots}), which is not surprising as the zero models are parameterized identically across all seven ZIB models, and differences are only introduced through the connection to the count model. Zero model DoD estimates can be understood as the difference in the reduction in proportion of heavy drinkers between the two treatment groups. For example, the ARcv model estimates that at the 3 month follow-up, the reduction in proportion of heavy drinkers was .068 [\textit{95\%CrI}= (-.065, .202)] greater in the SBIRT group than in the control group.
 
-\paragraph{Mean estimates:}
-\bwr{REW: Can you compare to the raw data as a check?}
-The top plot in Figure \ref{fig:meanplots} gives the overall means of days of heavy drinking out of the previous 90 coming from the entire zero-inflated models. In general, the ARcv model estimates lower levels of heavy drinking than the RI model, with smaller credible intervals. As in the DoD estimates, the differences between the LOZIB models and the RI model are mainly in the count model. While the LOZIB models do not find much difference between treatment groups, people in both treatment groups reduced rates of heavy drinking -- particularly through a decrease in the zero model estimate, that is, a decrease in probability of an observation coming from the count model.
 
-A comparison between the ARcv and RI models is given in Table \ref{tab:dodmean}. Again, the ARcv model estimates lower mean days of heavy drinking than the RI model, as well as smaller (less negative) DoD estimates. Given the better fit of the ARcv model, it is likely the RI is overstating the amount of heavy drinking as well as the effectiveness of intervention. \bwr{REW: Compare to raw data, relating to last 2 sentences} Table \ref{tab:dodmean} also provides the estimated posterior probability that the difference of differences is less than zero (p(DoD$<0$)), which would indicate superiority of SBIRT over the standard of care. There are large differences between the the ARcv and RI models in this estimated probability of intervention effectiveness at the 6 and 12 month visits, with the RI model again overstating the treatment effect compared to the ARcv model. 
-
-The bottom portion of Table \ref{tab:dodmean} gives posterior estimates and CrIs for variance and correlation parameters. The ARcv model has wider posterior distributions for the zero and count model standard deviation estimates, as well as for the $\psi$ parameter, which models the within-individual association between the zero and count model estimates. In addition, the within-individual random effects correlation is estimated to be rather high [ .732, \textit{95\%CrI} = (.647, .797)].
-
-
-\begin{table}[t]
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\begin{tabular}{rrllllll}
-			\hline
-			&&  \multicolumn{2}{c}{Observed} & \multicolumn{2}{c}{RI} & \multicolumn{2}{c}{INDcv}  \\ 
-			&& \multicolumn{1}{c}{Control} & \multicolumn{1}{c}{SBIRT} & \multicolumn{1}{c}{Control} & \multicolumn{1}{c}{SBIRT} & \multicolumn{1}{c}{Control} & \multicolumn{1}{c}{SBIRT}   \\
-			\hline
-			 \multirow[c]{4}{*}{Mean}& Baseline & \multicolumn{2}{c}{10.52} & \multicolumn{2}{c}{11.75 (10.42, 13.18)}  & \multicolumn{2}{c}{12.30 (10.87,  13.82)} \\ 
-			&3 Month & 5.60 & 4.25 & 8.01 (6.67, 9.45)& 5.00 (4.04, 6.07) & 5.57 (4.38, 6.94)& 5.57 (4.34, 6.98) \\ 
-			&6 Month  &  4.81& 4.77 & 7.14 (5.83, 8.54) & 5.61 (4.57, 6.75) & 6.21 (4.9, 7.70)& 4.84 (3.73, 6.11)\\ 
-			&12 Month   & 3.40 &3.79  & 4.92 (3.82, 6.12)& 4.64 (3.62, 5.77) & 3.65 (2.66, 4.85)& 4.51 (3.37, 5.86) \\ 
-			\hline
-	\end{tabular}}
-	\caption{Posterior means and 95\% Bayesian CrIs from RI and ARcv models. The top portion of the table gives mean days of heavy drinking out of the previous 90 days. The middle portion of the table gives DoD means and 95\% Bayesian CrIs, as well as the posterior probabilities that the DoD was less than zero - indicating a benefit of SBIRT over the control treatment. The bottom portion of the table gives posterior means and CrIs for the zero and count model random effects standard deviations ($\sigma_{1}$ and $\sigma_{2}$), the $\psi$ parameter, which models association between the count and zero models, and $\rho$, which is the within-individual across-time count model random effects correlation in the ARcv model. }
-	\label{tab:dodmean1}
-\end{table}
+%\begin{table}[t]
+%	\centering
+%	\resizebox{\textwidth}{!}{%
+%		\begin{tabular}{rrllllll}
+%			\hline
+%			&&  \multicolumn{2}{c}{Observed} & \multicolumn{2}{c}{RI} & \multicolumn{2}{c}{INDcv}  \\ 
+%			&& \multicolumn{1}{c}{Control} & \multicolumn{1}{c}{SBIRT} & \multicolumn{1}{c}{Control} & \multicolumn{1}{c}{SBIRT} & \multicolumn{1}{c}{Control} & \multicolumn{1}{c}{SBIRT}   \\
+%			\hline
+%			 \multirow[c]{4}{*}{Mean}& Baseline & \multicolumn{2}{c}{10.52} & \multicolumn{2}{c}{11.75 (10.42, 13.18)}  & \multicolumn{2}{c}{12.30 (10.87,  13.82)} \\ 
+%			&3 Month & 5.60 & 4.25 & 8.01 (6.67, 9.45)& 5.00 (4.04, 6.07) & 5.57 (4.38, 6.94)& 5.57 (4.34, 6.98) \\ 
+%			&6 Month  &  4.81& 4.77 & 7.14 (5.83, 8.54) & 5.61 (4.57, 6.75) & 6.21 (4.9, 7.70)& 4.84 (3.73, 6.11)\\ 
+%			&12 Month   & 3.40 &3.79  & 4.92 (3.82, 6.12)& 4.64 (3.62, 5.77) & 3.65 (2.66, 4.85)& 4.51 (3.37, 5.86) \\ 
+%			\hline
+%	\end{tabular}}
+%	\caption{Posterior means and 95\% Bayesian CrIs from RI and ARcv models. The top portion of the table gives mean days of heavy drinking out of the previous 90 days. The middle portion of the table gives DoD means and 95\% Bayesian CrIs, as well as the posterior probabilities that the DoD was less than zero - indicating a benefit of SBIRT over the control treatment. The bottom portion of the table gives posterior means and CrIs for the zero and count model random effects standard deviations ($\sigma_{1}$ and $\sigma_{2}$), the $\psi$ parameter, which models association between the count and zero models, and $\rho$, which is the within-individual across-time count model random effects correlation in the ARcv model. }
+%	\label{tab:dodmean1}
+%\end{table}
 
 
 \begin{table}[t]
@@ -414,12 +453,12 @@ The bottom portion of Table \ref{tab:dodmean} gives posterior estimates and CrIs
 
 
 
-\begin{figure}[t]
-	\centering
-	\includegraphics[scale=.5]{figures/MeanAllPlots.pdf}
-	\caption{\textbf{Top:} Posterior means and 95\% CrIs for mean days of heavy drinking per 90 days for each of the 7 fitted models for both SBIRT (Trt) and control (Ctrl) groups. Both treatment groups are estimated to have reductions in days of heavy drinking according to all models. \textbf{Bottom left:} Mean days of heavy drinking coming only from the count model, that is, only among subjects who were deemed to be heavy drinkers. \textbf{Bottom right:} Posterior means and 95\% CrIs for probability of being a heavy drinker at each visit for both treatment groups. In all plots, the random intercept model (RI), given in blue, and the autoregressive constant variance model (ARcv), given in orange, are bolded for emphasis.}
-	\label{fig:meanplots}
-\end{figure}
+%\begin{figure}[t]
+%	\centering
+%	\includegraphics[scale=.5]{figures/MeanAllPlots.pdf}
+%	\caption{\textbf{Top:} Posterior means and 95\% CrIs for mean days of heavy drinking per 90 days for each of the 7 fitted models for both SBIRT (Trt) and control (Ctrl) groups. Both treatment groups are estimated to have reductions in days of heavy drinking according to all models. \textbf{Bottom left:} Mean days of heavy drinking coming only from the count model, that is, only among subjects who were deemed to be heavy drinkers. \textbf{Bottom right:} Posterior means and 95\% CrIs for probability of being a heavy drinker at each visit for both treatment groups. In all plots, the random intercept model (RI), given in blue, and the autoregressive constant variance model (ARcv), given in orange, are bolded for emphasis.}
+%	\label{fig:meanplots}
+%\end{figure}
 
 
 \bwr{Weiss Notes: Rather large range among models in the zero model estimates. }

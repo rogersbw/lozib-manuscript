@@ -1,7 +1,6 @@
 # Script to produce posterior summary data set
 
 library(dplyr)
-library(ggplot2)
 
 ### Directory organization
 
