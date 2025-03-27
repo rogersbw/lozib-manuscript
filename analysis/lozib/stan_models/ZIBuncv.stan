@@ -72,6 +72,12 @@ model{
   sigma2 ~ normal(0, .5);
   psi ~ normal(0,1);
   L_Omega ~ lkj_corr_cholesky(1.0);
+
+  for (i in 1:V) {
+   for (j in (i+1):V) {
+     Omega2[i, j] ~ uniform(0, 1);  // Constrain correlations to be positive
+   }
+  }
   
 for(j in 1:J){
     gamma1[j] ~ normal(0, 1);
