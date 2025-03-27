@@ -34,13 +34,14 @@ transformed parameters{
   matrix[V,V] Omega2;
   
   vector[N] log_lik;
-  
 
   for(j in 1:J){
     gamma2[j] = (sigma2 .* (L_Omega * gamma2z[j]'))';
   }
   
   Omega2 = multiply_lower_tri_self_transpose(L_Omega);
+
+  f
   
   for(n in 1:N){
     theta[n] = inv_logit(X[n]*beta1 + sigma1*gamma1[ll[n]]);
@@ -76,6 +77,12 @@ model{
   
   psi ~ normal(0,1);
   L_Omega ~ lkj_corr_cholesky(1.0);
+
+  for (i in 1:V) {
+   for (j in (i+1):V) {
+     Omega2[i, j] ~ uniform(0, 1);  // Constrain correlations to be positive
+   }
+  }
   
 for(j in 1:J){
     gamma1[j] ~ normal(0, 1);
