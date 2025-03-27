@@ -40,8 +40,6 @@ transformed parameters{
   }
   
   Omega2 = multiply_lower_tri_self_transpose(L_Omega);
-
-  f
   
   for(n in 1:N){
     theta[n] = inv_logit(X[n]*beta1 + sigma1*gamma1[ll[n]]);
