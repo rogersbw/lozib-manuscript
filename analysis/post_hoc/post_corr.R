@@ -73,3 +73,6 @@ for (i in seq_len(dim(L_Omega)[1])) {
 Omega_post_summary <- apply(Omegas, c(2,3), function(x) {
   c(mean(x), quantile(x, c(0.025, 0.975)))
 })
+
+
+Omega_mean <- matrix(Omega_post_summary[1,,], nrow = 4, byrow = TRUE)

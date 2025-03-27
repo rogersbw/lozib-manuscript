@@ -80,6 +80,7 @@ model{
    for (j in (i+1):V) {
      Omega2[i, j] ~ uniform(0, 1);  // Constrain correlations to be positive
    }
+
   }
   
 for(j in 1:J){
